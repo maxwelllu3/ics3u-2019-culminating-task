@@ -8,9 +8,10 @@ Be sure to commit your work frequently; as discussed in class, this is a major p
 
 ## Install the shortcut
 
-To use the `./acp` shortcut, copy and paste these commands into your Terminal window in the `ics3u-2019-culminating-task` folder:
+To use the `./acp` shortcut, copy and paste these commands into your Terminal window after cloning:
 
 ```
+cd ics3u-2019-culminating-task
 rm -rf acp
 echo -e 'acp' >> .gitignore
 echo -e '#!/bin/bash' >> acp
