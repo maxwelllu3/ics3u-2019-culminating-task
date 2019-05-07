@@ -2,6 +2,8 @@
 
 Use this repository to complete your culminating task.
 
+Be sure to **fork** this repository before cloning.
+
 Be sure to commit your work frequently; as discussed in class, this is a major part of the expectations for the culminating task.
 
 ## Install the shortcut
