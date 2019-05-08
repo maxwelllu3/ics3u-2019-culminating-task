@@ -38,11 +38,13 @@ public class Hero extends Actor
      */
     private void checkKeys()
     {
-        if (Greenfoot.isKeyDown("left")) {
+        if (Greenfoot.isKeyDown("left"))
+        {
             setImage("hero-left.png");
             moveLeft();
         }
-        if (Greenfoot.isKeyDown("right")) {
+        if (Greenfoot.isKeyDown("right"))
+        {
             setImage("hero-right.png");
             moveRight();
         }
