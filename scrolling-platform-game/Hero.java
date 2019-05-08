@@ -18,6 +18,9 @@ public class Hero extends Actor
     
     // Vertical speed
     private int vSpeed = 5;
+    
+    // Accelaration for falls
+    private int acceleration = 2;
 
     /**
      * Act - do whatever the Hero wants to do. This method is called whenever
@@ -49,7 +52,11 @@ public class Hero extends Actor
      */
     public void fall()
     {
+        // Fall
         setLocation(getX(), getY() + vSpeed);
+        
+        // Accelerate (fall faster next time)
+        vSpeed = vSpeed + acceleration;
     }
 
     /**
