@@ -15,7 +15,7 @@ public class Hero extends Actor
      * These are available for use in any method below.
      */    
     // Horizontal speed
-    private int speed = 7;
+    private int speed = 8;
 
     // Vertical speed
     private int vSpeed = 5;
@@ -191,7 +191,7 @@ public class Hero extends Actor
         SideScrollingWorld world = (SideScrollingWorld) getWorld(); 
 
         // Decide whether to actually move, or make world's tiles move
-        if (currentX < world.getHalfVisibleWidth())
+        if (currentX - speed < world.getHalfVisibleWidth())
         {
             setLocation(getX() - speed, getY());
             currentX = getX();
