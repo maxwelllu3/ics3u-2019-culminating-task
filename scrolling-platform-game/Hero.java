@@ -21,6 +21,9 @@ public class Hero extends Actor
 
     // Accelaration for falls
     private int acceleration = 2;
+    
+    // Strength of a jump
+    private int jumpStrength = -12;
 
     /**
      * Act - do whatever the Hero wants to do. This method is called whenever
@@ -47,6 +50,10 @@ public class Hero extends Actor
         {
             setImage("hero-right.png");
             moveRight();
+        }
+        if (Greenfoot.isKeyDown("space"))
+        {
+            jump();
         }
     }
 
@@ -92,6 +99,15 @@ public class Hero extends Actor
         {
             return true;
         }
+    }
+    
+    /**
+     * Make the hero jump.
+     */
+    public void jump()
+    {
+        vSpeed = jumpStrength;
+        fall();
     }
 
     /**
