@@ -47,7 +47,7 @@ public class Hero extends Actor
             moveRight();
         }
     }
-    
+
     /**
      * Should the hero be falling right now?
      */
@@ -56,6 +56,16 @@ public class Hero extends Actor
         if (onGround())
         {
             vSpeed = 0;
+
+            // Get an reference to a ground object below the hero, if one exists
+            Actor under = getOneObjectAtOffset(0, getImage().getHeight() / 2, Ground.class);
+
+            // Bump the hero back up so that they are not "submerged" in ground
+            if (under != null)
+            {
+                int correctedYPosition = under.getY() - under.getImage().getHeight() / 2 - this.getImage().getHeight() / 2;
+                setLocation(getX(), correctedYPosition);
+            }
         }
         else
         {
@@ -70,7 +80,7 @@ public class Hero extends Actor
     {
         // Get an reference to a ground object below the hero, if one exists
         Actor under = getOneObjectAtOffset(0, getImage().getHeight() / 2, Ground.class);
-        
+
         // If there is no object of type Ground below the hero, 'under' is null
         if (under == null)
         {
@@ -81,7 +91,6 @@ public class Hero extends Actor
             return true;
         }
     }
-    
 
     /**
      * Make the hero fall.
