@@ -15,10 +15,10 @@ public class Hero extends Actor
      */    
     // Horizontal speed
     private int speed = 7;
-    
+
     // Vertical speed
     private int vSpeed = 5;
-    
+
     // Accelaration for falls
     private int acceleration = 2;
 
@@ -29,7 +29,7 @@ public class Hero extends Actor
     public void act() 
     {
         checkKeys();
-        fall();
+        checkFall();
         checkGameOver();
     }
 
@@ -49,13 +49,48 @@ public class Hero extends Actor
     }
     
     /**
+     * Should the hero be falling right now?
+     */
+    public void checkFall()
+    {
+        if (onGround())
+        {
+            vSpeed = 0;
+        }
+        else
+        {
+            fall();
+        }
+    }
+
+    /**
+     * Is the hero currently touching the ground?
+     */
+    public boolean onGround()
+    {
+        // Get an reference to a ground object below the hero, if one exists
+        Actor under = getOneObjectAtOffset(0, getImage().getHeight() / 2, Ground.class);
+        
+        // If there is no object of type Ground below the hero, 'under' is null
+        if (under == null)
+        {
+            return false;   // Not on the ground
+        }
+        else
+        {
+            return true;
+        }
+    }
+    
+
+    /**
      * Make the hero fall.
      */
     public void fall()
     {
         // Fall
         setLocation(getX(), getY() + vSpeed);
-        
+
         // Accelerate (fall faster next time)
         vSpeed = vSpeed + acceleration;
     }
@@ -84,16 +119,16 @@ public class Hero extends Actor
     {
         // Get object reference to world
         SideScrollingWorld world = (SideScrollingWorld) getWorld(); 
-        
+
         // Vertical position where hero no longer visible
         int offScreenVerticalPosition = (world.getHeight() + this.getImage().getHeight() / 2);
-        
+
         // Off bottom of screen?
         if (this.getY() > offScreenVerticalPosition)
         {
             // Remove the hero
             world.removeObject(this);
-            
+
             // Tell the user game is over
             world.showText("GAME OVER", world.getWidth() / 2, world.getHeight() / 2);
         }

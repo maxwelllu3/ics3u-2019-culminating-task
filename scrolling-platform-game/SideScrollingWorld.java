@@ -35,8 +35,22 @@ public class SideScrollingWorld extends World
      */
     private void setup()
     {
+        addHero();
         addGroundAtBottom();
     }
+    
+    /**
+     * Add the hero to the world.
+     */
+    private void addHero()
+    {
+        // Make the hero
+        Hero theHero = new Hero();
+       
+        // Add hero in bottom left corner of screen
+        addObject(theHero, getWidth() - 5 * getWidth() / 6, getHeight() / 4 * 3);
+    }
+    
     
     /**
      * Add blocks to create the ground to walk on at bottom of screen.
