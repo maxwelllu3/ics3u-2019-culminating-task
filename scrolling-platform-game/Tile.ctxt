@@ -1,6 +1,6 @@
 #BlueJ class context
 comment0.target=Tile
-comment0.text=\n\ Write\ a\ description\ of\ class\ Tile\ here.\n\ \n\ @author\ (your\ name)\ \n\ @version\ (a\ version\ number\ or\ a\ date)\n
+comment0.text=\n\ Abstract\ class\ used\ to\ move\ all\ subclasses\ when\ we\ need\ to\ make\ it\ look\ like\ the\ hero\ is\ moving.\n\ \n\ @author\ R.\ Gordon\n\ @version\ May\ 8,\ 2019\n
 comment1.params=
 comment1.target=Tile()
 comment1.text=\n\ Constructor\n\ \n\ This\ runs\ once.\n

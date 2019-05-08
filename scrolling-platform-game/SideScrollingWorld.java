@@ -29,9 +29,12 @@ public class SideScrollingWorld extends World
 
     // Hero
     Hero theHero;
-    
+
     // Track whether game is on
     private boolean isGameOver;
+
+    // Get access to the level map
+    private LevelMap level;
 
     /**
      * Constructor for objects of class SideScrollingWorld.
@@ -49,9 +52,12 @@ public class SideScrollingWorld extends World
         // Camera edges (what part of world is showing right now
         leftCameraEdge = 0;
         rightCameraEdge = VISIBLE_WIDTH;
-        
+
         // Game on
         isGameOver = false;
+
+        // Access the level map
+        level = new LevelMap();
     }
 
     /**
@@ -131,7 +137,7 @@ public class SideScrollingWorld extends World
     {
         return HALF_VISIBLE_WIDTH;
     }
-    
+
     /**
      * Return an object reference to the hero.
      */
@@ -139,13 +145,46 @@ public class SideScrollingWorld extends World
     {
         return theHero;
     }
-    
+
     /**
      * Set game over
      */
     public void setGameOver()
     {
         isGameOver = true;
+    }
+
+    /**
+     * Add tiles from the level map into the world, as needed between given horizontal range.
+     */
+    public void checkAddTiles(int heroX, int heroSpeed)
+    {
+        int leftX = heroX + HALF_VISIBLE_WIDTH;
+        int rightX = leftX + heroSpeed;
+        System.out.println("leftX is" + leftX);
+        System.out.println("rightX is" + rightX);
+
+        // Loop through all the tiles in the map, add any that are within the range given
+        for (int i = 0; i < level.COUNT_OF_TILES; i += 1)
+        {
+            System.out.println("Looping through tiles");
+            if (level.tileX[i] >= leftX && level.tileX[i] < rightX)
+            {
+                // Add this tile to the world
+                if (level.tileType[i] == level.TILE_GROUND)
+                {
+                    System.out.println("Creating ground at (" + level.tileX[i] + ", " + level.tileY[i] + ")");
+                    Ground ground = new Ground();
+                    addObject(ground, level.tileX[i], level.tileY[i]);
+                }
+                else if (level.tileType[i] == level.TILE_METAL_PLATE)
+                {
+                    System.out.println("Creating metal plate at (" + level.tileX[i] + ", " + level.tileY[i] + ")");
+                    MetalPlate metalPlate = new MetalPlate();
+                    addObject(metalPlate, level.tileX[i], level.tileY[i]);
+                }
+            }
+        }
     }
 }
 

@@ -26,8 +26,11 @@ public class Hero extends Actor
     // Strength of a jump
     private int jumpStrength = -24;
 
-    // Track theoretical position in wider "scrollable" world
+    // Track current theoretical position in wider "scrollable" world
     private int currentX;
+    
+    // Track position in prior animation frame in wider "scrollable" world
+    private int priorX;
     
     // Track whether game is over or not
     private boolean isGameOver;
@@ -41,6 +44,9 @@ public class Hero extends Actor
     {
         // Set where hero begins horizontally
         currentX = startingX;
+        
+        // Last known horizontal position is same as starting position when hero is created
+        priorX = currentX;
         
         // Game on
         isGameOver = false;
@@ -168,6 +174,9 @@ public class Hero extends Actor
         {
             // Track position in wider scrolling world
             currentX = currentX + speed;
+            
+            // Make sure any tiles just outside of right edge of camera space are added before we "arrive"
+            world.checkAddTiles(currentX, speed);
             
             // Get a list of all tiles (objects that need to move
             // to make hero look like they are moving)
