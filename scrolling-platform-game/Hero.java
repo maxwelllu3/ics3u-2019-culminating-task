@@ -30,6 +30,7 @@ public class Hero extends Actor
     {
         checkKeys();
         fall();
+        checkGameOver();
     }
 
     /**
@@ -75,4 +76,26 @@ public class Hero extends Actor
         setLocation(getX() - speed, getY());
     }
 
+    /**
+     * When the hero falls off the bottom of the screen,
+     * game is over. We must remove them.
+     */
+    public void checkGameOver()
+    {
+        // Get object reference to world
+        SideScrollingWorld world = (SideScrollingWorld) getWorld(); 
+        
+        // Vertical position where hero no longer visible
+        int offScreenVerticalPosition = (world.getHeight() + this.getImage().getHeight() / 2);
+        
+        // Off bottom of screen?
+        if (this.getY() > offScreenVerticalPosition)
+        {
+            // Remove the hero
+            world.removeObject(this);
+            
+            // Tell the user game is over
+            world.showText("GAME OVER", world.getWidth() / 2, world.getHeight() / 2);
+        }
+    }
 }
