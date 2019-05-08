@@ -1,4 +1,5 @@
 import greenfoot.*;  // (World, Actor, GreenfootImage, Greenfoot and MouseInfo)
+import java.util.List;
 
 /**
  * This is the class for the "main character" in the action.
@@ -27,14 +28,7 @@ public class Hero extends Actor
 
     // Track theoretical position in wider "scrollable" world
     private int currentX;
-
-    // Does hero need tiles to move (scroll) to create appearance of hero moving?
-    private boolean needsScroll;
-
-    // Track direction
-    private boolean movingRight;
-    private boolean movingLeft;
-
+    
     /**
      * Constructor
      * 
@@ -44,13 +38,6 @@ public class Hero extends Actor
     {
         // Set where hero begins horizontally
         currentX = startingX;
-
-        // Initially hero should literally move in world
-        needsScroll = false;
-
-        // Hero is moving neither right nor left at the moment
-        movingRight = false;
-        movingLeft = false;
     }
 
     /**
@@ -74,18 +61,11 @@ public class Hero extends Actor
             setImage("hero-left.png");
             moveLeft();
         }
-        else if (Greenfoot.isKeyDown("right"))
+        if (Greenfoot.isKeyDown("right"))
         {
             setImage("hero-right.png");
             moveRight();
         }
-        else
-        {
-            // Track direction
-            movingRight = false;
-            movingLeft = false;
-        }
-        
         if (Greenfoot.isKeyDown("space"))
         {
             // Only able to jump when on ground
@@ -166,10 +146,6 @@ public class Hero extends Actor
      */
     public void moveRight()
     {
-        // Track direction
-        movingRight = true;
-        movingLeft = false;
-
         // Get object reference to world
         SideScrollingWorld world = (SideScrollingWorld) getWorld(); 
 
@@ -178,11 +154,22 @@ public class Hero extends Actor
         {
             setLocation(getX() + speed, getY());
             currentX = getX();
-            needsScroll = false;
         }
         else
         {
-            needsScroll = true;
+            // Track position in wider scrolling world
+            currentX = currentX + speed;
+            
+            // Get a list of all tiles (objects that need to move
+            // to make hero look like they are moving)
+            List<Tile> tiles = world.getObjects(Tile.class);
+            
+            // Move all the tile objects
+            for (Tile tile : tiles)
+            {
+                // Tiles move left to make hero appear to move right
+                tile.moveLeft(speed);
+            }
         }   
     }
 
@@ -191,10 +178,6 @@ public class Hero extends Actor
      */
     public void moveLeft()
     {
-        // Track direction
-        movingLeft = true;
-        movingRight = false;
-
         // Get object reference to world
         SideScrollingWorld world = (SideScrollingWorld) getWorld(); 
 
@@ -203,45 +186,23 @@ public class Hero extends Actor
         {
             setLocation(getX() - speed, getY());
             currentX = getX();
-            needsScroll = false;
         }
         else
         {
-            needsScroll = true;
+            // Track position in wider scrolling world
+            currentX = currentX + speed;
+            
+            // Get a list of all tiles (objects that need to move
+            // to make hero look like they are moving)
+            List<Tile> tiles = world.getObjects(Tile.class);
+            
+            // Move all the tile objects
+            for (Tile tile : tiles)
+            {
+                // Tiles move right to make hero appear to move right
+                tile.moveRight(speed);
+            }            
         }   
-    }
-
-    /**
-     * Allow other objects in world to determine whether actor needs them to scroll
-     * to make it look like the hero is moving.
-     */
-    public boolean needsScrollToMove()
-    {
-        return needsScroll;
-    }
-
-    /**
-     * Allow other objects in world to determine the hero's horizontal speed.
-     */
-    public int getSpeed()
-    {
-        return speed;
-    }
- 
-    /**
-     * Allow other objects in world to see if Mario needs to move to the right.
-     */
-    public boolean needsToMoveRight()
-    {
-        return movingRight;
-    }
-    
-    /**
-     * Allow other objects in world to see if Mario needs to move to the left.
-     */
-    public boolean needsToMoveLeft()
-    {
-        return movingLeft;
     }
 
     /**

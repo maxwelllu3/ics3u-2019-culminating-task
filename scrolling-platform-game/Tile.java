@@ -16,9 +16,6 @@ public abstract class Tile extends Actor
     // Get object reference to world
     SideScrollingWorld world;
 
-    // Get hero object reference
-    Hero theHero;
-    
     /**
      * Constructor
      * 
@@ -26,8 +23,6 @@ public abstract class Tile extends Actor
      */
     Tile()
     {
-        world = (SideScrollingWorld) getWorld();
-        theHero = world.getHero();
     }
 
     /**
@@ -42,25 +37,17 @@ public abstract class Tile extends Actor
     /**
      * Move to left (to make hero look like they are moving right)
      */
-    private void moveLeft()
+    public void moveLeft(int speed)
     {
-        // Move left if hero needs to move right
-        if (theHero.needsScrollToMove() && theHero.needsToMoveRight())
-        {
-            setLocation(getX() - theHero.getSpeed(), getY());
-        }
+        setLocation(getX() - speed, getY());
     }
 
     /**
      * Move to right (to make hero look like they are moving left)
      */
-    private void moveRight()
+    public void moveRight(int speed)
     {
-        // Move right if hero needs to move left
-        if (theHero.needsScrollToMove() && theHero.needsToMoveLeft())
-        {
-            setLocation(getX() + theHero.getSpeed(), getY());
-        }
+        setLocation(getX() + speed, getY());
     }
 
 }
