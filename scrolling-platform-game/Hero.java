@@ -12,8 +12,12 @@ public class Hero extends Actor
      * Instance variables
      * 
      * These are available for use in any method below.
-     */
+     */    
+    // Horizontal speed
     private int speed = 7;
+    
+    // Vertical speed
+    private int vSpeed = 5;
 
     /**
      * Act - do whatever the Hero wants to do. This method is called whenever
@@ -22,6 +26,7 @@ public class Hero extends Actor
     public void act() 
     {
         checkKeys();
+        fall();
     }
 
     /**
@@ -37,6 +42,14 @@ public class Hero extends Actor
             setImage("hero-right.png");
             moveRight();
         }
+    }
+    
+    /**
+     * Make the hero fall.
+     */
+    public void fall()
+    {
+        setLocation(getX(), getY() + vSpeed);
     }
 
     /**
