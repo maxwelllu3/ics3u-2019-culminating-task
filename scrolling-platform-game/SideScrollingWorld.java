@@ -49,6 +49,15 @@ public class SideScrollingWorld extends World
     }
 
     /**
+     * Set up the starting scene.
+     */
+    private void setup()
+    {
+        addHero();
+        addGroundAtBottom();
+    }
+
+    /**
      * Act
      * 
      * This method is called approximately 60 times per second.
@@ -68,24 +77,18 @@ public class SideScrollingWorld extends World
     }
 
     /**
-     * Set up the starting scene.
-     */
-    private void setup()
-    {
-        addHero();
-        addGroundAtBottom();
-    }
-
-    /**
      * Add the hero to the world.
      */
     private void addHero()
     {
+        // Initial horizontal position
+        int initialX = getWidth() - 5 * getWidth() / 6;
+        
         // Instantiate the hero object
-        theHero = new Hero();
+        theHero = new Hero(initialX);
 
         // Add hero in bottom left corner of screen
-        addObject(theHero, getWidth() - 5 * getWidth() / 6, getHeight() / 4 * 3);
+        addObject(theHero, initialX, getHeight() / 4 * 3);
     }
 
     /**
@@ -110,6 +113,14 @@ public class SideScrollingWorld extends World
             // Add the objects
             addObject(groundTile, x, y);
         }
+    }
+    
+    /**
+     * Return half of the visible width of the world.
+     */
+    public int getHalfVisibleWidth()
+    {
+        return HALF_VISIBLE_WIDTH;
     }
 }
 

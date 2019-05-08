@@ -21,9 +21,22 @@ public class Hero extends Actor
 
     // Accelaration for falls
     private int acceleration = 2;
-    
+
     // Strength of a jump
     private int jumpStrength = -24;
+
+    // Track theoretical position in wider "scrollable" world
+    private int currentX;
+
+    /**
+     * Constructor
+     * 
+     * This runs once when the Hero object is created.
+     */
+    Hero(int startingX)
+    {
+        currentX = startingX;
+    }
 
     /**
      * Act - do whatever the Hero wants to do. This method is called whenever
@@ -104,7 +117,7 @@ public class Hero extends Actor
             return true;
         }
     }
-    
+
     /**
      * Make the hero jump.
      */
@@ -131,7 +144,15 @@ public class Hero extends Actor
      */
     public void moveRight()
     {
-        setLocation(getX() + speed, getY());
+        // Get object reference to world
+        SideScrollingWorld world = (SideScrollingWorld) getWorld(); 
+
+        // Decide whether to actually move, or make world's tiles move
+        if (currentX < world.getHalfVisibleWidth())
+        {
+            setLocation(getX() + speed, getY());
+            currentX = getX();
+        }
     }
 
     /**
@@ -139,7 +160,15 @@ public class Hero extends Actor
      */
     public void moveLeft()
     {
-        setLocation(getX() - speed, getY());
+        // Get object reference to world
+        SideScrollingWorld world = (SideScrollingWorld) getWorld(); 
+
+        // Decide whether to actually move, or make world's tiles move
+        if (currentX < world.getHalfVisibleWidth())
+        {
+            setLocation(getX() - speed, getY());
+            currentX = getX();
+        }   
     }
 
     /**
