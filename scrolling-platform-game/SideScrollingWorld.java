@@ -66,7 +66,7 @@ public class SideScrollingWorld extends World
     {
         updateCameraEdges();
     }
-    
+
     /**
      * Keep track of the visible range of the world, based on hero movement.
      */
@@ -83,7 +83,7 @@ public class SideScrollingWorld extends World
     {
         // Initial horizontal position
         int initialX = getWidth() - 5 * getWidth() / 6;
-        
+
         // Instantiate the hero object
         theHero = new Hero(initialX);
 
@@ -114,7 +114,7 @@ public class SideScrollingWorld extends World
             addObject(groundTile, x, y);
         }
     }
-    
+
     /**
      * Return half of the visible width of the world.
      */
@@ -122,8 +122,13 @@ public class SideScrollingWorld extends World
     {
         return HALF_VISIBLE_WIDTH;
     }
+    
+    /**
+     * Return an object reference to the hero.
+     */
+    public Hero getHero()
+    {
+        return theHero;
+    }
 }
-
-
-
 
