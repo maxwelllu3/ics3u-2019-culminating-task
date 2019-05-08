@@ -23,7 +23,7 @@ public class Hero extends Actor
     private int acceleration = 2;
     
     // Strength of a jump
-    private int jumpStrength = -12;
+    private int jumpStrength = -24;
 
     /**
      * Act - do whatever the Hero wants to do. This method is called whenever
@@ -53,7 +53,11 @@ public class Hero extends Actor
         }
         if (Greenfoot.isKeyDown("space"))
         {
-            jump();
+            // Only able to jump when on ground
+            if (onGround())
+            {
+                jump();
+            }
         }
     }
 
