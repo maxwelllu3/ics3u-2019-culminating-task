@@ -29,6 +29,9 @@ public class SideScrollingWorld extends World
 
     // Hero
     Hero theHero;
+    
+    // Track whether game is on
+    private boolean isGameOver;
 
     /**
      * Constructor for objects of class SideScrollingWorld.
@@ -46,6 +49,9 @@ public class SideScrollingWorld extends World
         // Camera edges (what part of world is showing right now
         leftCameraEdge = 0;
         rightCameraEdge = VISIBLE_WIDTH;
+        
+        // Game on
+        isGameOver = false;
     }
 
     /**
@@ -64,7 +70,10 @@ public class SideScrollingWorld extends World
      */
     public void act()
     {
-        updateCameraEdges();
+        if (!isGameOver)
+        {
+            updateCameraEdges();
+        }
     }
 
     /**
@@ -129,6 +138,14 @@ public class SideScrollingWorld extends World
     public Hero getHero()
     {
         return theHero;
+    }
+    
+    /**
+     * Set game over
+     */
+    public void setGameOver()
+    {
+        isGameOver = true;
     }
 }
 

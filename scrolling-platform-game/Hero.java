@@ -29,6 +29,9 @@ public class Hero extends Actor
     // Track theoretical position in wider "scrollable" world
     private int currentX;
     
+    // Track whether game is over or not
+    private boolean isGameOver;
+    
     /**
      * Constructor
      * 
@@ -38,6 +41,9 @@ public class Hero extends Actor
     {
         // Set where hero begins horizontally
         currentX = startingX;
+        
+        // Game on
+        isGameOver = false;
     }
 
     /**
@@ -48,7 +54,10 @@ public class Hero extends Actor
     {
         checkKeys();
         checkFall();
-        checkGameOver();
+        if (!isGameOver)
+        {
+            checkGameOver();
+        }
     }
 
     /**
@@ -56,17 +65,17 @@ public class Hero extends Actor
      */
     private void checkKeys()
     {
-        if (Greenfoot.isKeyDown("left"))
+        if (Greenfoot.isKeyDown("left") && !isGameOver)
         {
             setImage("hero-left.png");
             moveLeft();
         }
-        if (Greenfoot.isKeyDown("right"))
+        if (Greenfoot.isKeyDown("right") && !isGameOver)
         {
             setImage("hero-right.png");
             moveRight();
         }
-        if (Greenfoot.isKeyDown("space"))
+        if (Greenfoot.isKeyDown("space") && !isGameOver)
         {
             // Only able to jump when on ground
             if (onGround())
@@ -190,7 +199,7 @@ public class Hero extends Actor
         else
         {
             // Track position in wider scrolling world
-            currentX = currentX + speed;
+            currentX = currentX - speed;
             
             // Get a list of all tiles (objects that need to move
             // to make hero look like they are moving)
@@ -221,6 +230,8 @@ public class Hero extends Actor
         if (this.getY() > offScreenVerticalPosition)
         {
             // Remove the hero
+            isGameOver = true;
+            world.setGameOver();
             world.removeObject(this);
 
             // Tell the user game is over
