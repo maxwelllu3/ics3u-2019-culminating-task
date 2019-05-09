@@ -12,10 +12,10 @@ public class LevelMap
     // Types of tiles in the world
     public static final String TILE_GROUND = "ground";
     public static final String TILE_METAL_PLATE = "metal plate";
-    
+
     // Count of tiles in the world
-    public static final int COUNT_OF_TILES = 1;
-    
+    public static final int COUNT_OF_TILES = 30;
+
     // Where the tiles exist in the wider scrolling world and what type they are
     public int tileX[];
     public int tileY[];
@@ -30,12 +30,22 @@ public class LevelMap
         tileX = new int[COUNT_OF_TILES];
         tileY = new int[COUNT_OF_TILES];
         tileType = new String[COUNT_OF_TILES];
-        
-        // Set values for arrays to track what tiles are where in the scrollable world
-        tileX[0] = 688;
-        tileY[0] = 464;
-        tileType[0] = TILE_METAL_PLATE;
-    }
 
+        // Set values for arrays to track what tiles are where in the scrollable world
+        
+        // Make a series of steps
+        for (int i = 0; i < 10; i += 1)
+        {
+            tileX[0 + i * 3] = 640 + 16 + 32 * i + i * 50;
+            tileY[0 + i * 3] = 432 - i * 32;
+            tileType[0 + i * 3] = TILE_METAL_PLATE;
+            tileX[1 + i * 3] = 640 + 16 + 32 * i + 16 + i * 50;
+            tileY[1 + i * 3] = 432 - i * 32;
+            tileType[1 + i * 3] = TILE_METAL_PLATE;
+            tileX[2 + i * 3] = 640 + 16 + 32 * i + 32 + i * 50;
+            tileY[2 + i * 3] = 432 - i * 32;
+            tileType[2 + i * 3] = TILE_METAL_PLATE;
+        }
+    }
 
 }
