@@ -28,13 +28,13 @@ public class Hero extends Actor
 
     // Track current theoretical position in wider "scrollable" world
     private int currentX;
-    
+
     // Track position in prior animation frame in wider "scrollable" world
     private int priorX;
-    
+
     // Track whether game is over or not
     private boolean isGameOver;
-    
+
     /**
      * Constructor
      * 
@@ -44,10 +44,10 @@ public class Hero extends Actor
     {
         // Set where hero begins horizontally
         currentX = startingX;
-        
+
         // Last known horizontal position is same as starting position when hero is created
         priorX = currentX;
-        
+
         // Game on
         isGameOver = false;
     }
@@ -101,13 +101,25 @@ public class Hero extends Actor
             vSpeed = 0;
 
             // Get an reference to any object that's created from a subclass of Tile,
-            // that is below the hero, if one exists
-            Actor under = getOneObjectAtOffset(0, getImage().getHeight() / 2, Tile.class);
+            // that is below (or just below in front, or just below behind) the hero, if one exists
+            Actor directlyUnder = getOneObjectAtOffset(0, getImage().getHeight() / 2, Tile.class);
+            Actor frontUnder = getOneObjectAtOffset(getImage().getWidth() / 3, getImage().getHeight() / 2, Tile.class);
+            Actor rearUnder = getOneObjectAtOffset(0 - getImage().getWidth() / 3, getImage().getHeight() / 2, Tile.class);
 
             // Bump the hero back up so that they are not "submerged" in tile
-            if (under != null)
+            if (directlyUnder != null)
             {
-                int correctedYPosition = under.getY() - under.getImage().getHeight() / 2 - this.getImage().getHeight() / 2;
+                int correctedYPosition = directlyUnder.getY() - directlyUnder.getImage().getHeight() / 2 - this.getImage().getHeight() / 2;
+                setLocation(getX(), correctedYPosition);
+            }
+            if (frontUnder != null)
+            {
+                int correctedYPosition = frontUnder.getY() - frontUnder.getImage().getHeight() / 2 - this.getImage().getHeight() / 2;
+                setLocation(getX(), correctedYPosition);
+            }
+            if (rearUnder != null)
+            {
+                int correctedYPosition = rearUnder.getY() - rearUnder.getImage().getHeight() / 2 - this.getImage().getHeight() / 2;
                 setLocation(getX(), correctedYPosition);
             }
         }
@@ -123,10 +135,12 @@ public class Hero extends Actor
     public boolean onTile()
     {
         // Get an reference to a solid object (subclass of Tile) below the hero, if one exists
-        Actor under = getOneObjectAtOffset(0, getImage().getHeight() / 2, Tile.class);
+        Actor directlyUnder = getOneObjectAtOffset(0, getImage().getHeight() / 2, Tile.class);
+        Actor frontUnder = getOneObjectAtOffset(getImage().getWidth() / 3, getImage().getHeight() / 2, Tile.class);
+        Actor rearUnder = getOneObjectAtOffset(0 - getImage().getWidth() / 3, getImage().getHeight() / 2, Tile.class);
 
-        // If there is no solid object below the hero, 'under' is null
-        if (under == null)
+        // If there is no solid object below (or slightly in front of or behind) the hero...
+        if (directlyUnder == null && frontUnder == null && rearUnder == null)
         {
             return false;   // Not on a solid object
         }
@@ -175,14 +189,14 @@ public class Hero extends Actor
         {
             // Track position in wider scrolling world
             currentX = currentX + speed;
-            
+
             // Make sure any tiles just outside of right edge of camera space are added before we "arrive"
             world.checkAddTiles(currentX, speed);
-            
+
             // Get a list of all tiles (objects that need to move
             // to make hero look like they are moving)
             List<Tile> tiles = world.getObjects(Tile.class);
-            
+
             // Move all the tile objects
             for (Tile tile : tiles)
             {
@@ -210,11 +224,11 @@ public class Hero extends Actor
         {
             // Track position in wider scrolling world
             currentX = currentX - speed;
-            
+
             // Get a list of all tiles (objects that need to move
             // to make hero look like they are moving)
             List<Tile> tiles = world.getObjects(Tile.class);
-            
+
             // Move all the tile objects
             for (Tile tile : tiles)
             {

@@ -14,7 +14,7 @@ public class LevelMap
     public static final String TILE_METAL_PLATE = "metal plate";
 
     // Count of tiles in the world
-    public static final int COUNT_OF_TILES = 30;
+    public static final int COUNT_OF_TILES = 40;
 
     // Where the tiles exist in the wider scrolling world and what type they are
     public int tileX[];
@@ -36,15 +36,18 @@ public class LevelMap
         // Make a series of steps
         for (int i = 0; i < 10; i += 1)
         {
-            tileX[0 + i * 3] = 640 + 16 + 32 * i + i * 50;
-            tileY[0 + i * 3] = 432 - i * 32;
-            tileType[0 + i * 3] = TILE_METAL_PLATE;
-            tileX[1 + i * 3] = 640 + 16 + 32 * i + 16 + i * 50;
-            tileY[1 + i * 3] = 432 - i * 32;
-            tileType[1 + i * 3] = TILE_METAL_PLATE;
-            tileX[2 + i * 3] = 640 + 16 + 32 * i + 32 + i * 50;
-            tileY[2 + i * 3] = 432 - i * 32;
-            tileType[2 + i * 3] = TILE_METAL_PLATE;
+            tileX[0 + i * 4] = 640 + 32 + 32 * i + i * 64;
+            tileY[0 + i * 4] = 432 - i * 32;
+            tileType[0 + i * 4] = TILE_METAL_PLATE;
+            tileX[1 + i * 4] = 640 + 32 + 32 * i + 16 + i * 64;
+            tileY[1 + i * 4] = 432 - i * 32;
+            tileType[1 + i * 4] = TILE_METAL_PLATE;
+            tileX[2 + i * 4] = 640 + 32 + 32 * i + 32 + i * 64;
+            tileY[2 + i * 4] = 432 - i * 32;
+            tileType[2 + i * 4] = TILE_METAL_PLATE;
+            tileX[3 + i * 4] = 640 + 32 + 32 * i + 48 + i * 64;
+            tileY[3 + i * 4] = 432 - i * 32;
+            tileType[3 + i * 4] = TILE_METAL_PLATE;
         }
     }
 
