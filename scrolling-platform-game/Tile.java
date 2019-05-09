@@ -29,15 +29,6 @@ public abstract class Tile extends Actor
     }
 
     /**
-     * Act - do whatever the Tile wants to do. This method is called whenever
-     * the 'Act' or 'Run' button gets pressed in the environment.
-     */
-    public void act() 
-    {
-        // Add your action code here.
-    }
-
-    /**
      * Move to left (to make hero look like they are moving right)
      */
     public void moveLeft(int speed)
@@ -52,9 +43,5 @@ public abstract class Tile extends Actor
     {
         setLocation(getX() + speed, getY());
     }
-    
-    /**
-     * Return 
-     */
     
 }

@@ -24,10 +24,6 @@ public class SideScrollingWorld extends World
     public static final int SCROLLABLE_WIDTH = VISIBLE_WIDTH * 3;
     private static final int SCROLLABLE_HEIGHT = VISIBLE_HEIGHT;
 
-    // Camera edges
-    int leftCameraEdge;
-    int rightCameraEdge;
-
     // Hero
     Hero theHero;
 
@@ -49,10 +45,6 @@ public class SideScrollingWorld extends World
 
         // Set up the starting scene
         setup();
-
-        // Camera edges (what part of world is showing right now
-        leftCameraEdge = 0;
-        rightCameraEdge = VISIBLE_WIDTH;
 
         // Game on
         isGameOver = false;
@@ -77,19 +69,6 @@ public class SideScrollingWorld extends World
      */
     public void act()
     {
-        if (!isGameOver)
-        {
-            updateCameraEdges();
-        }
-    }
-
-    /**
-     * Keep track of the visible range of the world, based on hero movement.
-     */
-    public void updateCameraEdges()
-    {
-        leftCameraEdge = theHero.getX() - HALF_VISIBLE_WIDTH;
-        rightCameraEdge = theHero.getX() + HALF_VISIBLE_WIDTH;
     }
 
     /**
@@ -154,19 +133,17 @@ public class SideScrollingWorld extends World
     {
         int rightCameraEdgeInScrollableWorld = heroX + HALF_VISIBLE_WIDTH;
         int justBeyondRightCameraEdgeInScrollableWorld = rightCameraEdgeInScrollableWorld + heroSpeed * 10;
-        //System.out.println("leftX is" + leftX);
-        //System.out.println("rightX is" + rightX);
 
         // Loop through all the tiles in the map, add any that are within the range given, that have not already been added
         for (int i = 0; i < level.COUNT_OF_TILES; i += 1)
         {
             if (level.tileX[i] >= rightCameraEdgeInScrollableWorld &&
-                level.tileX[i] < justBeyondRightCameraEdgeInScrollableWorld &&
-                level.tileHasBeenAddedToWorld[i] == false)
+            level.tileX[i] < justBeyondRightCameraEdgeInScrollableWorld &&
+            level.tileHasBeenAddedToWorld[i] == false)
             {
                 // Determine x position of tile to add in visible world terms
                 int visibleWorldX = level.tileX[i] - rightCameraEdgeInScrollableWorld + VISIBLE_WIDTH;
-                
+
                 // Add this tile to the world
                 if (level.tileType[i] == level.TILE_GROUND)
                 {
