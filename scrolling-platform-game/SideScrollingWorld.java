@@ -30,9 +30,6 @@ public class SideScrollingWorld extends World
     // Track whether game is on
     private boolean isGameOver;
 
-    // Get access to the level map
-    private LevelMap level;
-
     /**
      * Constructor for objects of class SideScrollingWorld.
      */
@@ -48,22 +45,114 @@ public class SideScrollingWorld extends World
 
         // Game on
         isGameOver = false;
-
-        // Access the level map
-        level = new LevelMap();
     }
 
     /**
-     * Set up the starting scene (visible portion when game begins).
-     * 
-     * Objects that should appear when scrolling happens must be defined in the LevelMap class.
+     * Set up the entire world.
      */
     private void setup()
     {
-        addGroundAtBottom();
-        addClouds();
+        addLeftGround();
         addFences();
+        addMetalPlateSteps();
+        addClouds();
+        addRightGround();
         addHero();
+    }
+
+    /**
+     * Add blocks to create the ground to walk on at bottom-left of scrollable world.
+     */
+    private void addLeftGround()
+    {
+        // How many tiles will cover the bottom of the initial visible area of screen?
+        final int tilesToCreate = getWidth() / TILE_SIZE;
+
+        // Loop to create and add the tile objects
+        for (int i = 0; i < tilesToCreate; i += 1)
+        {
+            // Add ground objects at bottom of screen
+            // NOTE: Actors are added based on their centrepoint, so the math is a bit trickier.
+            int x = i * TILE_SIZE + TILE_SIZE / 2;
+            int y = getHeight() - TILE_SIZE / 2;
+
+            // Create a ground tile
+            Ground groundTile = new Ground(x, y);
+
+            // Add the objects
+            addObject(groundTile, x, y);
+        }
+    }
+
+    /**
+     * Add some fences at left and right side.
+     */
+    private void addFences()
+    {
+        // Three fences on left side of world
+        int x = TILE_SIZE / 2 + TILE_SIZE * 5;
+        int y = VISIBLE_HEIGHT - TILE_SIZE / 2 - TILE_SIZE;
+        Fence fence1 = new Fence(x, y);
+        addObject(fence1, x, y);
+
+        x = TILE_SIZE / 2 + TILE_SIZE * 6;
+        y = VISIBLE_HEIGHT - TILE_SIZE / 2 - TILE_SIZE;        
+        Fence fence2 = new Fence(x, y);
+        addObject(fence2, x, y);
+
+        x = TILE_SIZE / 2 + TILE_SIZE * 7;
+        y = VISIBLE_HEIGHT - TILE_SIZE / 2 - TILE_SIZE;
+        Fence fence3 = new Fence(x, y);
+        addObject(fence3, x, y);
+
+        // Two fences on right side of world
+        x = SCROLLABLE_WIDTH - TILE_SIZE / 2 - TILE_SIZE * 3;
+        y = VISIBLE_HEIGHT / 2;
+        Fence fence4 = new Fence(x, y);
+        addObject(fence4, x, y);
+
+        x = SCROLLABLE_WIDTH - TILE_SIZE / 2 - TILE_SIZE * 4;
+        y = VISIBLE_HEIGHT / 2;
+        Fence fence5 = new Fence(x, y);
+        addObject(fence5, x, y);
+    }
+
+    /**
+     * Add steps made out of metal plates leading to end of world.
+     */
+    private void addMetalPlateSteps()
+    {
+        // How many plates total?
+        final int COUNT_OF_METAL_PLATES = 20;
+        final int PLATES_PER_GROUP = 4;
+
+        // Add groups of plates
+        for (int i = 0; i < COUNT_OF_METAL_PLATES / PLATES_PER_GROUP; i += 1)
+        {
+            // Group of four metal plates all at same y position
+            int y = VISIBLE_HEIGHT - TILE_SIZE / 2 * 3 - i * TILE_SIZE;
+
+            // Add the individual plates in a given group
+            for (int j = 0; j < PLATES_PER_GROUP; j += 1)
+            {
+                int x = VISIBLE_WIDTH + TILE_SIZE * 2 + TILE_SIZE * (i + j) + TILE_SIZE * 5 * i;
+                MetalPlate plate = new MetalPlate(x, y);
+                addObject(plate, x, y);
+            }
+        }
+    }
+
+    /**
+     * Add a few clouds for the opening scene.
+     */
+    private void addClouds()
+    {
+        Cloud cloud1 = new Cloud(170, 125);
+        addObject(cloud1, 170, 125);
+        Cloud cloud2 = new Cloud(450, 175);
+        addObject(cloud2, 450, 175);
+        Cloud cloud3 = new Cloud(775, 50);
+        addObject(cloud3, 775, 50);
     }
 
     /**
@@ -91,51 +180,42 @@ public class SideScrollingWorld extends World
     }
 
     /**
-     * Add blocks to create the ground to walk on at bottom of screen.
+     * Add blocks to create the ground to walk on at top-right of scrollable world.
      */
-    private void addGroundAtBottom()
+    private void addRightGround()
     {
-        // How many tiles will cover the bottom of the screen?
-        int tilesToCreate = getWidth() / TILE_SIZE;
+        // Constants to control dimensions of the ground at end of world
+        final int COUNT_OF_GROUND = 8;
+        final int GROUND_BELOW_COLUMNS = COUNT_OF_GROUND;
+        final int GROUND_BELOW_ROWS = 6;
+        final int COUNT_OF_GROUND_BELOW = GROUND_BELOW_COLUMNS * GROUND_BELOW_ROWS;
 
-        // Loop to create and add the tile objects
-        for (int i = 0; i < tilesToCreate; i += 1)
+        // 1. Make ground at end of level (top layer)
+        for (int i = 0; i < COUNT_OF_GROUND; i += 1)
         {
-            // Add ground objects at bottom of screen
-            // NOTE: Actors are added based on their centrepoint, so the math is a bit trickier.
-            int x = i * TILE_SIZE + TILE_SIZE / 2;
-            int y = getHeight() - TILE_SIZE / 2;
+            // Position in wider scrollable world
+            int x = SCROLLABLE_WIDTH - TILE_SIZE / 2 - i * TILE_SIZE;
+            int y = VISIBLE_HEIGHT / 2 + TILE_SIZE;
 
-            // Create a ground tile
-            Ground groundTile = new Ground(x, y);
-
-            // Add the objects
-            addObject(groundTile, x, y);
+            // Create object and add it
+            Ground ground = new Ground(x, y);
+            addObject(ground, x, y);
         }
-    }
 
-    /**
-     * Add a few clouds for the opening scene.
-     */
-    private void addClouds()
-    {
-        Cloud cloud1 = new Cloud(170, 125);
-        addObject(cloud1, 170, 125);
-        Cloud cloud2 = new Cloud(450, 175);
-        addObject(cloud2, 450, 175);
-    }
+        // 2. Make sub-ground at end of level (below top layer)
+        for (int i = 0; i < GROUND_BELOW_COLUMNS; i += 1)
+        {
+            for (int j = 0; j < GROUND_BELOW_ROWS; j += 1)
+            {
+                // Position in wider scrollable world
+                int x = SCROLLABLE_WIDTH - TILE_SIZE / 2 - i * TILE_SIZE;
+                int y = VISIBLE_HEIGHT / 2 + TILE_SIZE + TILE_SIZE * (j + 1);
 
-    /**
-     * Add some fences for the opening scene.
-     */
-    private void addFences()
-    {
-        Fence fence1 = new Fence(TILE_SIZE / 2 + TILE_SIZE * 5, VISIBLE_HEIGHT - TILE_SIZE / 2 - TILE_SIZE);
-        addObject(fence1, TILE_SIZE / 2 + TILE_SIZE * 5, VISIBLE_HEIGHT - TILE_SIZE / 2 - TILE_SIZE);
-        Fence fence2 = new Fence(TILE_SIZE / 2 + TILE_SIZE * 6, VISIBLE_HEIGHT - TILE_SIZE / 2 - TILE_SIZE);
-        addObject(fence2, TILE_SIZE / 2 + TILE_SIZE * 6, VISIBLE_HEIGHT - TILE_SIZE / 2 - TILE_SIZE);
-        Fence fence3 = new Fence(TILE_SIZE / 2 + TILE_SIZE * 7, VISIBLE_HEIGHT - TILE_SIZE / 2 - TILE_SIZE);
-        addObject(fence3, TILE_SIZE / 2 + TILE_SIZE * 7, VISIBLE_HEIGHT - TILE_SIZE / 2 - TILE_SIZE);
+                // Create object and add it
+                GroundBelow groundBelow = new GroundBelow(x, y);
+                addObject(groundBelow, x, y);
+            }
+        }
     }
 
     /**
@@ -152,64 +232,6 @@ public class SideScrollingWorld extends World
     public void setGameOver()
     {
         isGameOver = true;
-    }
-
-    /**
-     * Add tiles from the level map into the world, as needed between given horizontal range.
-     */
-    public void checkAddTiles(int heroX, int heroSpeed)
-    {
-        int rightCameraEdgeInScrollableWorld = heroX + HALF_VISIBLE_WIDTH;
-        int justBeyondRightCameraEdgeInScrollableWorld = rightCameraEdgeInScrollableWorld + heroSpeed * 10;
-
-        // Loop through all the tiles in the map, add any that are within the range given, that have not already been added
-        for (int i = 0; i < level.COUNT_OF_TILES; i += 1)
-        {
-            if (level.tileX[i] >= rightCameraEdgeInScrollableWorld &&
-            level.tileX[i] < justBeyondRightCameraEdgeInScrollableWorld &&
-            level.tileHasBeenAddedToWorld[i] == false)
-            {
-                // Determine x position of tile to add in visible world terms
-                int visibleWorldX = level.tileX[i] - rightCameraEdgeInScrollableWorld + VISIBLE_WIDTH;
-
-                // Add this tile to the world
-                if (level.tileType[i] == level.TILE_GROUND)
-                {
-                    System.out.println("Creating ground at scrollable world position of (" + level.tileX[i] + ", " + level.tileY[i] + ")");
-                    Ground ground = new Ground(level.tileX[i], level.tileY[i]);
-                    addObject(ground, visibleWorldX, level.tileY[i]);
-                    level.tileHasBeenAddedToWorld[i] = true;
-                }
-                else if (level.tileType[i] == level.TILE_GROUND_BELOW)
-                {
-                    System.out.println("Creating below ground tile at scrollable world position of (" + level.tileX[i] + ", " + level.tileY[i] + ")");
-                    GroundBelow groundBelow = new GroundBelow(level.tileX[i], level.tileY[i]);
-                    addObject(groundBelow, visibleWorldX, level.tileY[i]);
-                    level.tileHasBeenAddedToWorld[i] = true;
-                }
-                else if (level.tileType[i] == level.TILE_METAL_PLATE)
-                {
-                    System.out.println("Creating metal plate at scrollable world position of (" + level.tileX[i] + ", " + level.tileY[i] + ")");
-                    MetalPlate metalPlate = new MetalPlate(level.tileX[i], level.tileY[i]);
-                    addObject(metalPlate, visibleWorldX, level.tileY[i]);
-                    level.tileHasBeenAddedToWorld[i] = true;
-                }
-                else if (level.tileType[i] == level.TILE_CLOUD)
-                {
-                    System.out.println("Creating a cloud at scrollable world position of (" + level.tileX[i] + ", " + level.tileY[i] + ")");
-                    Cloud cloud = new Cloud(level.tileX[i], level.tileY[i]);
-                    addObject(cloud, visibleWorldX, level.tileY[i]);
-                    level.tileHasBeenAddedToWorld[i] = true;
-                }
-                else if (level.tileType[i] == level.TILE_FENCE)
-                {
-                    System.out.println("Creating a fence at scrollable world position of (" + level.tileX[i] + ", " + level.tileY[i] + ")");
-                    Fence fence = new Fence(level.tileX[i], level.tileY[i]);
-                    addObject(fence, visibleWorldX, level.tileY[i]);
-                    level.tileHasBeenAddedToWorld[i] = true;
-                }
-            }
-        }
     }
 }
 

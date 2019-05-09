@@ -224,9 +224,6 @@ public class Hero extends Actor
             // Track position in wider scrolling world
             currentScrollableWorldXPosition += deltaX;
 
-            // Make sure any tiles just outside of right edge of camera space are added before we "arrive"
-            world.checkAddTiles(currentScrollableWorldXPosition, deltaX);
-
             // Get a list of all platforms (objects that need to move
             // to make hero look like they are moving)
             List<Platform> platforms = world.getObjects(Platform.class);
