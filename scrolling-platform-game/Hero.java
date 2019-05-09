@@ -32,6 +32,16 @@ public class Hero extends Actor
     // Track whether game is over or not
     private boolean isGameOver;
 
+    // Constants to track vertical direction
+    private static final String JUMPING_UP = "up";
+    private static final String JUMPING_DOWN = "down";
+    private String verticalDirection;
+
+    // Constants to track horizontal direction
+    private static final String FACING_RIGHT = "right";
+    private static final String FACING_LEFT = "left";
+    private String horizontalDirection;
+
     /**
      * Constructor
      * 
@@ -44,6 +54,15 @@ public class Hero extends Actor
 
         // Game on
         isGameOver = false;
+
+        // First jump will be in 'down' direction
+        verticalDirection = JUMPING_DOWN;
+
+        // Facing right to start
+        horizontalDirection = FACING_RIGHT;
+        
+        // Set image
+        setImage("hero-jump-down-right.png");
     }
 
     /**
@@ -67,12 +86,10 @@ public class Hero extends Actor
     {
         if (Greenfoot.isKeyDown("left") && !isGameOver)
         {
-            setImage("hero-left.png");
             moveLeft();
         }
         if (Greenfoot.isKeyDown("right") && !isGameOver)
         {
-            setImage("hero-right.png");
             moveRight();
         }
         if (Greenfoot.isKeyDown("space") && !isGameOver)
@@ -94,6 +111,16 @@ public class Hero extends Actor
         {
             // Stop falling
             deltaY = 0;
+
+            // Set image
+            if (horizontalDirection == FACING_RIGHT)
+            {
+                setImage("hero-right.png");
+            }
+            else
+            {
+                setImage("hero-left.png");
+            }
 
             // Get a reference to any object that's created from a subclass of Platform,
             // that is below (or just below in front, or just below behind) the hero
@@ -150,6 +177,19 @@ public class Hero extends Actor
      */
     public void jump()
     {
+        // Track vertical direction
+        verticalDirection = JUMPING_UP;
+
+        // Set image
+        if (horizontalDirection == FACING_RIGHT)
+        {
+            setImage("hero-jump-up-right.png");
+        }
+        else
+        {
+            setImage("hero-jump-up-left.png");
+        }
+
         // Change the vertical speed to the power of the jump
         deltaY = jumpStrength;
 
@@ -162,6 +202,22 @@ public class Hero extends Actor
      */
     public void fall()
     {
+        // See if direction has changed
+        if (deltaY > 0)
+        {
+            verticalDirection = JUMPING_DOWN;
+            
+            // Set image
+            if (horizontalDirection == FACING_RIGHT)
+            {
+                setImage("hero-jump-down-right.png");
+            }
+            else
+            {
+                setImage("hero-jump-down-left.png");
+            }
+        }
+
         // Fall (move vertically)
         int newVisibleWorldYPosition = getY() + deltaY;
         setLocation(getX(), newVisibleWorldYPosition );
@@ -175,6 +231,27 @@ public class Hero extends Actor
      */
     public void moveRight()
     {
+        // Track direction
+        horizontalDirection = FACING_RIGHT;
+
+        // Set image 
+        if (onPlatform())
+        {
+            setImage("hero-right.png");
+        }
+        else
+        {
+            // Set appropriate jumping image
+            if (verticalDirection == JUMPING_UP)
+            {
+                setImage("hero-jump-up-right.png");
+            }
+            else
+            {
+                setImage("hero-jump-down-right.png");
+            }
+        }
+
         // Get object reference to world
         SideScrollingWorld world = (SideScrollingWorld) getWorld(); 
 
@@ -266,6 +343,27 @@ public class Hero extends Actor
      */
     public void moveLeft()
     {
+        // Track direction
+        horizontalDirection = FACING_LEFT;
+
+        // Set image 
+        if (onPlatform())
+        {
+            setImage("hero-left.png");
+        }
+        else
+        {
+            // Set appropriate jumping image
+            if (verticalDirection == JUMPING_UP)
+            {
+                setImage("hero-jump-up-left.png");
+            }
+            else
+            {
+                setImage("hero-jump-down-left.png");
+            }
+        }
+
         // Get object reference to world
         SideScrollingWorld world = (SideScrollingWorld) getWorld(); 
 
