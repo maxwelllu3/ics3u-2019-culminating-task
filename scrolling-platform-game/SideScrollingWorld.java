@@ -161,14 +161,13 @@ public class SideScrollingWorld extends World
     {
         int leftX = heroX + HALF_VISIBLE_WIDTH;
         int rightX = leftX + heroSpeed;
-        System.out.println("leftX is" + leftX);
-        System.out.println("rightX is" + rightX);
+        //System.out.println("leftX is" + leftX);
+        //System.out.println("rightX is" + rightX);
 
-        // Loop through all the tiles in the map, add any that are within the range given
+        // Loop through all the tiles in the map, add any that are within the range given, that have not already been added
         for (int i = 0; i < level.COUNT_OF_TILES; i += 1)
         {
-            System.out.println("Looping through tiles");
-            if (level.tileX[i] >= leftX && level.tileX[i] < rightX)
+            if (level.tileX[i] >= leftX && level.tileX[i] < rightX && level.tileHasBeenAddedToWorld[i] == false)
             {
                 // Add this tile to the world
                 if (level.tileType[i] == level.TILE_GROUND)
@@ -176,12 +175,14 @@ public class SideScrollingWorld extends World
                     System.out.println("Creating ground at (" + level.tileX[i] + ", " + level.tileY[i] + ")");
                     Ground ground = new Ground();
                     addObject(ground, level.tileX[i], level.tileY[i]);
+                    level.tileHasBeenAddedToWorld[i] = true;
                 }
                 else if (level.tileType[i] == level.TILE_METAL_PLATE)
                 {
                     System.out.println("Creating metal plate at (" + level.tileX[i] + ", " + level.tileY[i] + ")");
                     MetalPlate metalPlate = new MetalPlate();
                     addObject(metalPlate, level.tileX[i], level.tileY[i]);
+                    level.tileHasBeenAddedToWorld[i] = true;
                 }
             }
         }
