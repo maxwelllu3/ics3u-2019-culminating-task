@@ -15,10 +15,10 @@ public class Hero extends Actor
      * These are available for use in any method below.
      */    
     // Horizontal speed
-    private int speed = 8;
+    private int speed = 4;
 
     // Vertical speed
-    private int vSpeed = 5;
+    private int vSpeed = 4;
 
     // Accelaration for falls
     private int acceleration = 2;
@@ -83,8 +83,8 @@ public class Hero extends Actor
         }
         if (Greenfoot.isKeyDown("space") && !isGameOver)
         {
-            // Only able to jump when on ground
-            if (onGround())
+            // Only able to jump when on a solid object
+            if (onTile())
             {
                 jump();
             }
@@ -96,14 +96,15 @@ public class Hero extends Actor
      */
     public void checkFall()
     {
-        if (onGround())
+        if (onTile())
         {
             vSpeed = 0;
 
-            // Get an reference to a ground object below the hero, if one exists
-            Actor under = getOneObjectAtOffset(0, getImage().getHeight() / 2, Ground.class);
+            // Get an reference to any object that's created from a subclass of Tile,
+            // that is below the hero, if one exists
+            Actor under = getOneObjectAtOffset(0, getImage().getHeight() / 2, Tile.class);
 
-            // Bump the hero back up so that they are not "submerged" in ground
+            // Bump the hero back up so that they are not "submerged" in tile
             if (under != null)
             {
                 int correctedYPosition = under.getY() - under.getImage().getHeight() / 2 - this.getImage().getHeight() / 2;
@@ -117,17 +118,17 @@ public class Hero extends Actor
     }
 
     /**
-     * Is the hero currently touching the ground?
+     * Is the hero currently touching a solid object?
      */
-    public boolean onGround()
+    public boolean onTile()
     {
-        // Get an reference to a ground object below the hero, if one exists
-        Actor under = getOneObjectAtOffset(0, getImage().getHeight() / 2, Ground.class);
+        // Get an reference to a solid object (subclass of Tile) below the hero, if one exists
+        Actor under = getOneObjectAtOffset(0, getImage().getHeight() / 2, Tile.class);
 
-        // If there is no object of type Ground below the hero, 'under' is null
+        // If there is no solid object below the hero, 'under' is null
         if (under == null)
         {
-            return false;   // Not on the ground
+            return false;   // Not on a solid object
         }
         else
         {
