@@ -9,6 +9,16 @@ import greenfoot.*;  // (World, Actor, GreenfootImage, Greenfoot and MouseInfo)
 public class Ground extends Tile
 {
     /**
+     * Constructor
+     * 
+     * Called once when object is created.
+     */
+    Ground(int scrollableWorldX, int scrollableWorldY)
+    {
+        super(scrollableWorldX, scrollableWorldY);
+    }
+    
+    /**
      * Act - do whatever the Ground wants to do. This method is called whenever
      * the 'Act' or 'Run' button gets pressed in the environment.
      */

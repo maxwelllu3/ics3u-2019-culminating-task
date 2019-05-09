@@ -13,16 +13,19 @@ public abstract class Tile extends Actor
      * 
      * Can be used by any method below.
      */
-    // Get object reference to world
-    SideScrollingWorld world;
-
+    // The location of this object in the scrollable world
+    private int scrollableWorldPositionX;
+    private int scrollableWorldPositionY;
+    
     /**
      * Constructor
      * 
      * This runs once.
      */
-    Tile()
+    Tile(int scrollableWorldX, int scrollableWorldY)
     {
+        scrollableWorldPositionX = scrollableWorldX;
+        scrollableWorldPositionY = scrollableWorldY;
     }
 
     /**

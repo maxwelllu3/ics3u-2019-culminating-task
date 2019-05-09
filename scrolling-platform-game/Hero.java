@@ -27,10 +27,7 @@ public class Hero extends Actor
     private int jumpStrength = -24;
 
     // Track current theoretical position in wider "scrollable" world
-    private int currentX;
-
-    // Track position in prior animation frame in wider "scrollable" world
-    private int priorX;
+    private int currentScrollableWorldXPosition;
 
     // Track whether game is over or not
     private boolean isGameOver;
@@ -43,10 +40,7 @@ public class Hero extends Actor
     Hero(int startingX)
     {
         // Set where hero begins horizontally
-        currentX = startingX;
-
-        // Last known horizontal position is same as starting position when hero is created
-        priorX = currentX;
+        currentScrollableWorldXPosition = startingX;
 
         // Game on
         isGameOver = false;
@@ -180,24 +174,57 @@ public class Hero extends Actor
         SideScrollingWorld world = (SideScrollingWorld) getWorld(); 
 
         // Decide whether to actually move, or make world's tiles move
-        if (currentX < world.getHalfVisibleWidth())
+        if (currentScrollableWorldXPosition - speed < world.HALF_VISIBLE_WIDTH)
         {
+            // HERO IS WITHIN EXTREME LEFT PORTION OF SCROLLABLE WORLD
+            // So... actually move the actor within the visible world.
+
+            // Set location in visible world
             setLocation(getX() + speed, getY());
-            currentX = getX();
+
+            // Track position in wider scrolling world
+            currentScrollableWorldXPosition = getX();
+        }
+        else if (currentScrollableWorldXPosition + speed * 2 > world.SCROLLABLE_WIDTH - world.HALF_VISIBLE_WIDTH)
+        {
+            // HERO IS WITHIN EXTREME RIGHT PORTION OF SCROLLABLE WORLD
+            // So... actually move the actor within the visible world.
+
+            // Allow movement only when not at edge of world
+            if (currentScrollableWorldXPosition < world.SCROLLABLE_WIDTH - this.getImage().getWidth() / 2)
+            {
+                // Set location in visible world
+                setLocation(getX() + speed, getY());
+
+                // Track position in wider scrolling world
+                currentScrollableWorldXPosition += speed;
+            }
+            else
+            {
+                isGameOver = true;
+                world.setGameOver();
+
+                // Tell the user game is over
+                world.showText("LEVEL COMPLETE", world.getWidth() / 2, world.getHeight() / 2);
+            }
+
         }
         else
         {
+            // HERO IS BETWEEN LEFT AND RIGHT PORTIONS OF SCROLLABLE WORLD
+            // So... we move the other objects to create illusion of hero moving
+
             // Track position in wider scrolling world
-            currentX = currentX + speed;
+            currentScrollableWorldXPosition += speed;
 
             // Make sure any tiles just outside of right edge of camera space are added before we "arrive"
-            world.checkAddTiles(currentX, speed);
+            world.checkAddTiles(currentScrollableWorldXPosition, speed);
 
             // Get a list of all tiles (objects that need to move
             // to make hero look like they are moving)
             List<Tile> tiles = world.getObjects(Tile.class);
 
-            // Move all the tile objects
+            // Move all the tile objects to make it look like hero is moving
             for (Tile tile : tiles)
             {
                 // Tiles move left to make hero appear to move right
@@ -215,15 +242,40 @@ public class Hero extends Actor
         SideScrollingWorld world = (SideScrollingWorld) getWorld(); 
 
         // Decide whether to actually move, or make world's tiles move
-        if (currentX - speed < world.getHalfVisibleWidth())
+        if (currentScrollableWorldXPosition - speed < world.HALF_VISIBLE_WIDTH)
         {
-            setLocation(getX() - speed, getY());
-            currentX = getX();
+            // HERO IS WITHIN EXTREME LEFT PORTION OF SCROLLABLE WORLD
+            // So... actually move the actor within the visible world.
+
+            // Don't let hero go off left edge of scrollable world 
+            // (Allow movement only when not at left edge)
+            if (currentScrollableWorldXPosition > 0)
+            {
+                // Set location in visible world
+                setLocation(getX() - speed, getY());
+
+                // Track position in wider scrolling world
+                currentScrollableWorldXPosition = getX();
+            }            
         }
+        else if (currentScrollableWorldXPosition + speed * 2 > world.SCROLLABLE_WIDTH - world.HALF_VISIBLE_WIDTH)
+        {
+            // HERO IS WITHIN EXTREME RIGHT PORTION OF SCROLLABLE WORLD
+            // So... actually move the actor within the visible world.
+
+            // Set location in visible world
+            setLocation(getX() - speed, getY());
+
+            // Track position in wider scrolling world
+            currentScrollableWorldXPosition -= speed;
+        }        
         else
         {
+            // HERO IS BETWEEN LEFT AND RIGHT PORTIONS OF SCROLLABLE WORLD
+            // So... we move the other objects to create illusion of hero moving
+
             // Track position in wider scrolling world
-            currentX = currentX - speed;
+            currentScrollableWorldXPosition -= speed;
 
             // Get a list of all tiles (objects that need to move
             // to make hero look like they are moving)

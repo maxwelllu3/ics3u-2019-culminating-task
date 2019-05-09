@@ -19,9 +19,10 @@ public class SideScrollingWorld extends World
     // World size constants
     private static final int VISIBLE_WIDTH = 640;
     private static final int VISIBLE_HEIGHT = 480;
-    private static final int HALF_VISIBLE_WIDTH = VISIBLE_WIDTH / 2;
+    public static final int HALF_VISIBLE_WIDTH = VISIBLE_WIDTH / 2;
     private static final int HALF_VISIBLE_HEIGHT = VISIBLE_HEIGHT / 2;
-    private static final int WORLD_WIDTH = VISIBLE_WIDTH * 3;
+    public static final int SCROLLABLE_WIDTH = VISIBLE_WIDTH * 3;
+    private static final int SCROLLABLE_HEIGHT = VISIBLE_HEIGHT;
 
     // Camera edges
     int leftCameraEdge;
@@ -123,19 +124,11 @@ public class SideScrollingWorld extends World
             int y = getHeight() - TILE_SIZE / 2;
 
             // Create a ground tile
-            Ground groundTile = new Ground();
+            Ground groundTile = new Ground(x, y);
 
             // Add the objects
             addObject(groundTile, x, y);
         }
-    }
-
-    /**
-     * Return half of the visible width of the world.
-     */
-    public int getHalfVisibleWidth()
-    {
-        return HALF_VISIBLE_WIDTH;
     }
 
     /**
@@ -159,29 +152,41 @@ public class SideScrollingWorld extends World
      */
     public void checkAddTiles(int heroX, int heroSpeed)
     {
-        int leftX = heroX + HALF_VISIBLE_WIDTH;
-        int rightX = leftX + heroSpeed;
+        int rightCameraEdgeInScrollableWorld = heroX + HALF_VISIBLE_WIDTH;
+        int justBeyondRightCameraEdgeInScrollableWorld = rightCameraEdgeInScrollableWorld + heroSpeed * 10;
         //System.out.println("leftX is" + leftX);
         //System.out.println("rightX is" + rightX);
 
         // Loop through all the tiles in the map, add any that are within the range given, that have not already been added
         for (int i = 0; i < level.COUNT_OF_TILES; i += 1)
         {
-            if (level.tileX[i] >= leftX && level.tileX[i] < rightX && level.tileHasBeenAddedToWorld[i] == false)
+            if (level.tileX[i] >= rightCameraEdgeInScrollableWorld &&
+                level.tileX[i] < justBeyondRightCameraEdgeInScrollableWorld &&
+                level.tileHasBeenAddedToWorld[i] == false)
             {
+                // Determine x position of tile to add in visible world terms
+                int visibleWorldX = level.tileX[i] - rightCameraEdgeInScrollableWorld + VISIBLE_WIDTH;
+                
                 // Add this tile to the world
                 if (level.tileType[i] == level.TILE_GROUND)
                 {
-                    System.out.println("Creating ground at (" + level.tileX[i] + ", " + level.tileY[i] + ")");
-                    Ground ground = new Ground();
-                    addObject(ground, level.tileX[i], level.tileY[i]);
+                    System.out.println("Creating ground at scrollable world position of (" + level.tileX[i] + ", " + level.tileY[i] + ")");
+                    Ground ground = new Ground(level.tileX[i], level.tileY[i]);
+                    addObject(ground, visibleWorldX, level.tileY[i]);
+                    level.tileHasBeenAddedToWorld[i] = true;
+                }
+                else if (level.tileType[i] == level.TILE_GROUND_BELOW)
+                {
+                    System.out.println("Creating below ground tile at scrollable world position of (" + level.tileX[i] + ", " + level.tileY[i] + ")");
+                    GroundBelow groundBelow = new GroundBelow(level.tileX[i], level.tileY[i]);
+                    addObject(groundBelow, visibleWorldX, level.tileY[i]);
                     level.tileHasBeenAddedToWorld[i] = true;
                 }
                 else if (level.tileType[i] == level.TILE_METAL_PLATE)
                 {
-                    System.out.println("Creating metal plate at (" + level.tileX[i] + ", " + level.tileY[i] + ")");
-                    MetalPlate metalPlate = new MetalPlate();
-                    addObject(metalPlate, level.tileX[i], level.tileY[i]);
+                    System.out.println("Creating metal plate at scrollable world position of (" + level.tileX[i] + ", " + level.tileY[i] + ")");
+                    MetalPlate metalPlate = new MetalPlate(level.tileX[i], level.tileY[i]);
+                    addObject(metalPlate, visibleWorldX, level.tileY[i]);
                     level.tileHasBeenAddedToWorld[i] = true;
                 }
             }
