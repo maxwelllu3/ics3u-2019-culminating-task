@@ -54,12 +54,16 @@ public class SideScrollingWorld extends World
     }
 
     /**
-     * Set up the starting scene.
+     * Set up the starting scene (visible portion when game begins).
+     * 
+     * Objects that should appear when scrolling happens must be defined in the LevelMap class.
      */
     private void setup()
     {
-        addHero();
         addGroundAtBottom();
+        addClouds();
+        addFences();
+        addHero();
     }
 
     /**
@@ -108,6 +112,30 @@ public class SideScrollingWorld extends World
             // Add the objects
             addObject(groundTile, x, y);
         }
+    }
+
+    /**
+     * Add a few clouds for the opening scene.
+     */
+    private void addClouds()
+    {
+        Cloud cloud1 = new Cloud(170, 125);
+        addObject(cloud1, 170, 125);
+        Cloud cloud2 = new Cloud(450, 175);
+        addObject(cloud2, 450, 175);
+    }
+
+    /**
+     * Add some fences for the opening scene.
+     */
+    private void addFences()
+    {
+        Fence fence1 = new Fence(TILE_SIZE / 2 + TILE_SIZE * 5, VISIBLE_HEIGHT - TILE_SIZE / 2 - TILE_SIZE);
+        addObject(fence1, TILE_SIZE / 2 + TILE_SIZE * 5, VISIBLE_HEIGHT - TILE_SIZE / 2 - TILE_SIZE);
+        Fence fence2 = new Fence(TILE_SIZE / 2 + TILE_SIZE * 6, VISIBLE_HEIGHT - TILE_SIZE / 2 - TILE_SIZE);
+        addObject(fence2, TILE_SIZE / 2 + TILE_SIZE * 6, VISIBLE_HEIGHT - TILE_SIZE / 2 - TILE_SIZE);
+        Fence fence3 = new Fence(TILE_SIZE / 2 + TILE_SIZE * 7, VISIBLE_HEIGHT - TILE_SIZE / 2 - TILE_SIZE);
+        addObject(fence3, TILE_SIZE / 2 + TILE_SIZE * 7, VISIBLE_HEIGHT - TILE_SIZE / 2 - TILE_SIZE);
     }
 
     /**
@@ -164,6 +192,20 @@ public class SideScrollingWorld extends World
                     System.out.println("Creating metal plate at scrollable world position of (" + level.tileX[i] + ", " + level.tileY[i] + ")");
                     MetalPlate metalPlate = new MetalPlate(level.tileX[i], level.tileY[i]);
                     addObject(metalPlate, visibleWorldX, level.tileY[i]);
+                    level.tileHasBeenAddedToWorld[i] = true;
+                }
+                else if (level.tileType[i] == level.TILE_CLOUD)
+                {
+                    System.out.println("Creating a cloud at scrollable world position of (" + level.tileX[i] + ", " + level.tileY[i] + ")");
+                    Cloud cloud = new Cloud(level.tileX[i], level.tileY[i]);
+                    addObject(cloud, visibleWorldX, level.tileY[i]);
+                    level.tileHasBeenAddedToWorld[i] = true;
+                }
+                else if (level.tileType[i] == level.TILE_FENCE)
+                {
+                    System.out.println("Creating a fence at scrollable world position of (" + level.tileX[i] + ", " + level.tileY[i] + ")");
+                    Fence fence = new Fence(level.tileX[i], level.tileY[i]);
+                    addObject(fence, visibleWorldX, level.tileY[i]);
                     level.tileHasBeenAddedToWorld[i] = true;
                 }
             }

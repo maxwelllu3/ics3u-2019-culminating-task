@@ -25,6 +25,8 @@ public class LevelMap
     public static final String TILE_GROUND = "ground";
     public static final String TILE_GROUND_BELOW = "ground, below surface";
     public static final String TILE_METAL_PLATE = "metal plate";
+    public static final String TILE_CLOUD = "a cloud";
+    public static final String TILE_FENCE = "a fence";
 
     // Count of tile types in the world
     public static final int COUNT_OF_GROUND = 8;
@@ -32,9 +34,11 @@ public class LevelMap
     public static final int GROUND_BELOW_ROWS = 6;
     public static final int COUNT_OF_GROUND_BELOW = GROUND_BELOW_COLUMNS * GROUND_BELOW_ROWS;
     public static final int COUNT_OF_METAL_PLATES = 20;
+    public static final int COUNT_OF_CLOUDS = 2;
+    public static final int COUNT_OF_FENCES = 2;
 
     // Total count of tiles in world
-    public static final int COUNT_OF_TILES = COUNT_OF_METAL_PLATES + COUNT_OF_GROUND + COUNT_OF_GROUND_BELOW;
+    public static final int COUNT_OF_TILES = COUNT_OF_METAL_PLATES + COUNT_OF_GROUND + COUNT_OF_GROUND_BELOW + COUNT_OF_CLOUDS + COUNT_OF_FENCES;
 
     // Where the tiles exist (in scrollable world position) and what type they are
     public int tileX[];
@@ -102,6 +106,27 @@ public class LevelMap
             }
         }
 
+        // 4. Add some clouds (objects that are not platforms, and move "in the distance" at a slower rate)
+        tileX[COUNT_OF_METAL_PLATES + COUNT_OF_GROUND + COUNT_OF_GROUND_BELOW + 0] = 675;
+        tileY[COUNT_OF_METAL_PLATES + COUNT_OF_GROUND + COUNT_OF_GROUND_BELOW + 0] = 50;
+        tileType[COUNT_OF_METAL_PLATES + COUNT_OF_GROUND + COUNT_OF_GROUND_BELOW + 0] = TILE_CLOUD;
+        tileHasBeenAddedToWorld[COUNT_OF_METAL_PLATES + COUNT_OF_GROUND + COUNT_OF_GROUND_BELOW + 0] = false;
+
+        tileX[COUNT_OF_METAL_PLATES + COUNT_OF_GROUND + COUNT_OF_GROUND_BELOW + 1] = 1300;
+        tileY[COUNT_OF_METAL_PLATES + COUNT_OF_GROUND + COUNT_OF_GROUND_BELOW + 1] = 100;
+        tileType[COUNT_OF_METAL_PLATES + COUNT_OF_GROUND + COUNT_OF_GROUND_BELOW + 1] = TILE_CLOUD;
+        tileHasBeenAddedToWorld[COUNT_OF_METAL_PLATES + COUNT_OF_GROUND + COUNT_OF_GROUND_BELOW + 1] = false;
+
+        // 5. Add some fences (objects that are not platforms, but move in the foreground like platforms)
+        tileX[COUNT_OF_METAL_PLATES + COUNT_OF_GROUND + COUNT_OF_GROUND_BELOW + COUNT_OF_CLOUDS + 0] = SCROLLABLE_WIDTH - TILE_SIZE / 2 - TILE_SIZE * 3;
+        tileY[COUNT_OF_METAL_PLATES + COUNT_OF_GROUND + COUNT_OF_GROUND_BELOW + COUNT_OF_CLOUDS + 0] = VISIBLE_HEIGHT / 2;
+        tileType[COUNT_OF_METAL_PLATES + COUNT_OF_GROUND + COUNT_OF_GROUND_BELOW + COUNT_OF_CLOUDS + 0] = TILE_FENCE;
+        tileHasBeenAddedToWorld[COUNT_OF_METAL_PLATES + COUNT_OF_GROUND + COUNT_OF_GROUND_BELOW + COUNT_OF_CLOUDS + 0] = false;
+
+        tileX[COUNT_OF_METAL_PLATES + COUNT_OF_GROUND + COUNT_OF_GROUND_BELOW + COUNT_OF_CLOUDS + 1] = SCROLLABLE_WIDTH - TILE_SIZE / 2 - TILE_SIZE * 4;
+        tileY[COUNT_OF_METAL_PLATES + COUNT_OF_GROUND + COUNT_OF_GROUND_BELOW + COUNT_OF_CLOUDS + 1] = VISIBLE_HEIGHT / 2;
+        tileType[COUNT_OF_METAL_PLATES + COUNT_OF_GROUND + COUNT_OF_GROUND_BELOW + COUNT_OF_CLOUDS + 1] = TILE_FENCE;
+        tileHasBeenAddedToWorld[COUNT_OF_METAL_PLATES + COUNT_OF_GROUND + COUNT_OF_GROUND_BELOW + COUNT_OF_CLOUDS + 1] = false;
     }
 
 }

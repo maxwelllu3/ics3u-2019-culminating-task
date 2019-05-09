@@ -78,7 +78,7 @@ public class Hero extends Actor
         if (Greenfoot.isKeyDown("space") && !isGameOver)
         {
             // Only able to jump when on a solid object
-            if (onTile())
+            if (onPlatform())
             {
                 jump();
             }
@@ -90,17 +90,18 @@ public class Hero extends Actor
      */
     public void checkFall()
     {
-        if (onTile())
+        if (onPlatform())
         {
+            // Stop falling
             vSpeed = 0;
 
-            // Get an reference to any object that's created from a subclass of Tile,
-            // that is below (or just below in front, or just below behind) the hero, if one exists
-            Actor directlyUnder = getOneObjectAtOffset(0, getImage().getHeight() / 2, Tile.class);
-            Actor frontUnder = getOneObjectAtOffset(getImage().getWidth() / 3, getImage().getHeight() / 2, Tile.class);
-            Actor rearUnder = getOneObjectAtOffset(0 - getImage().getWidth() / 3, getImage().getHeight() / 2, Tile.class);
+            // Get a reference to any object that's created from a subclass of Platform,
+            // that is below (or just below in front, or just below behind) the hero
+            Actor directlyUnder = getOneObjectAtOffset(0, getImage().getHeight() / 2, Platform.class);
+            Actor frontUnder = getOneObjectAtOffset(getImage().getWidth() / 3, getImage().getHeight() / 2, Platform.class);
+            Actor rearUnder = getOneObjectAtOffset(0 - getImage().getWidth() / 3, getImage().getHeight() / 2, Platform.class);
 
-            // Bump the hero back up so that they are not "submerged" in tile
+            // Bump the hero back up so that they are not "submerged" in a platform object
             if (directlyUnder != null)
             {
                 int correctedYPosition = directlyUnder.getY() - directlyUnder.getImage().getHeight() / 2 - this.getImage().getHeight() / 2;
@@ -124,14 +125,14 @@ public class Hero extends Actor
     }
 
     /**
-     * Is the hero currently touching a solid object?
+     * Is the hero currently touching a solid object? (any subclass of Platform)
      */
-    public boolean onTile()
+    public boolean onPlatform()
     {
-        // Get an reference to a solid object (subclass of Tile) below the hero, if one exists
-        Actor directlyUnder = getOneObjectAtOffset(0, getImage().getHeight() / 2, Tile.class);
-        Actor frontUnder = getOneObjectAtOffset(getImage().getWidth() / 3, getImage().getHeight() / 2, Tile.class);
-        Actor rearUnder = getOneObjectAtOffset(0 - getImage().getWidth() / 3, getImage().getHeight() / 2, Tile.class);
+        // Get an reference to a solid object (subclass of Platform) below the hero, if one exists
+        Actor directlyUnder = getOneObjectAtOffset(0, getImage().getHeight() / 2, Platform.class);
+        Actor frontUnder = getOneObjectAtOffset(getImage().getWidth() / 3, getImage().getHeight() / 2, Platform.class);
+        Actor rearUnder = getOneObjectAtOffset(0 - getImage().getWidth() / 3, getImage().getHeight() / 2, Platform.class);
 
         // If there is no solid object below (or slightly in front of or behind) the hero...
         if (directlyUnder == null && frontUnder == null && rearUnder == null)
@@ -174,7 +175,7 @@ public class Hero extends Actor
         SideScrollingWorld world = (SideScrollingWorld) getWorld(); 
 
         // Decide whether to actually move, or make world's tiles move
-        if (currentScrollableWorldXPosition - speed < world.HALF_VISIBLE_WIDTH)
+        if (currentScrollableWorldXPosition < world.HALF_VISIBLE_WIDTH)
         {
             // HERO IS WITHIN EXTREME LEFT PORTION OF SCROLLABLE WORLD
             // So... actually move the actor within the visible world.
@@ -220,17 +221,41 @@ public class Hero extends Actor
             // Make sure any tiles just outside of right edge of camera space are added before we "arrive"
             world.checkAddTiles(currentScrollableWorldXPosition, speed);
 
-            // Get a list of all tiles (objects that need to move
+            // Get a list of all platforms (objects that need to move
             // to make hero look like they are moving)
-            List<Tile> tiles = world.getObjects(Tile.class);
+            List<Platform> platforms = world.getObjects(Platform.class);
+
+            // Move all the platform objects to make it look like hero is moving
+            for (Platform platform : platforms)
+            {
+                // Platforms move left to make hero appear to move right
+                platform.moveLeft(speed);
+            }
+
+            // Get a list of all decorations (objects that need to move
+            // to make hero look like they are moving)
+            List<Decoration> decorations = world.getObjects(Decoration.class);
+
+            // Move all the decoration objects to make it look like hero is moving
+            for (Decoration decoration: decorations)
+            {
+                // Platforms move left to make hero appear to move right
+                decoration.moveLeft(speed);
+            }
+
+            // Get a list of all farAwayItems (objects that need to move
+            // to make hero look like they are moving)
+            List<FarAwayItem> farAwayItems = world.getObjects(FarAwayItem.class);
 
             // Move all the tile objects to make it look like hero is moving
-            for (Tile tile : tiles)
+            for (FarAwayItem farAwayItem : farAwayItems)
             {
-                // Tiles move left to make hero appear to move right
-                tile.moveLeft(speed);
+                // FarAwayItems move left to make hero appear to move right
+                farAwayItem.moveLeft(speed / 4);
             }
+
         }   
+
     }
 
     /**
@@ -277,17 +302,40 @@ public class Hero extends Actor
             // Track position in wider scrolling world
             currentScrollableWorldXPosition -= speed;
 
-            // Get a list of all tiles (objects that need to move
+            // Get a list of all platforms (objects that need to move
             // to make hero look like they are moving)
-            List<Tile> tiles = world.getObjects(Tile.class);
+            List<Platform> platforms = world.getObjects(Platform.class);
 
-            // Move all the tile objects
-            for (Tile tile : tiles)
+            // Move all the platform objects at same speed as hero
+            for (Platform platform : platforms)
             {
-                // Tiles move right to make hero appear to move right
-                tile.moveRight(speed);
-            }            
-        }   
+                // Platforms move right to make hero appear to move left
+                platform.moveRight(speed);
+            }
+
+            // Get a list of all decorations (objects that need to move
+            // to make hero look like they are moving)
+            List<Decoration> decorations = world.getObjects(Decoration.class);
+
+            // Move all the decoration objects to make it look like hero is moving
+            for (Decoration decoration: decorations)
+            {
+                // Platforms move right to make hero appear to move left
+                decoration.moveRight(speed);
+            }
+            
+            // Get a list of all items that are in the distance (far away items)
+            List<FarAwayItem> farAwayItems = world.getObjects(FarAwayItem.class);
+
+            // Move all the FarAwayItem objects at half speed as hero to create depth illusion
+            for (FarAwayItem farAwayItem : farAwayItems)
+            {
+                // FarAwayItems move right to make hero appear to move left
+                farAwayItem.moveRight(speed / 4);
+            }
+
+        } 
+
     }
 
     /**

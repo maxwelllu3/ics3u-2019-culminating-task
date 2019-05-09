@@ -6,7 +6,7 @@ import greenfoot.*;  // (World, Actor, GreenfootImage, Greenfoot and MouseInfo)
  * @author R. Gordon
  * @version May 8, 2019
  */
-public class Ground extends Tile
+public class Ground extends Platform
 {
     /**
      * Constructor
