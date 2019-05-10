@@ -43,8 +43,10 @@ public class Hero extends Actor
     private String horizontalDirection;
 
     // For walking animation
-    private GreenfootImage walkingImages[];
+    private GreenfootImage walkingRightImages[];
+    private GreenfootImage walkingLeftImages[];
     private static final int WALK_ANIMATION_DELAY = 8;
+    private static final int COUNT_OF_WALKING_IMAGES = 2;
     private int walkingFrames;
 
     /**
@@ -69,13 +71,18 @@ public class Hero extends Actor
         // Set image
         setImage("hero-jump-down-right.png");
 
-        // Initialize the 'walking' arrays with images
-        walkingImages = new GreenfootImage[2];
+        // Initialize the 'walking' arrays
+        walkingRightImages = new GreenfootImage[COUNT_OF_WALKING_IMAGES];
+        walkingLeftImages = new GreenfootImage[COUNT_OF_WALKING_IMAGES];
 
         // Load walking images from disk
-        for (int i = 0; i < walkingImages.length; i++)
+        for (int i = 0; i < walkingRightImages.length; i++)
         {
-            walkingImages[i] = new GreenfootImage("hero-walk-right-" + i + ".png");
+            walkingRightImages[i] = new GreenfootImage("hero-walk-right-" + i + ".png");
+
+            // Create left-facing images by mirroring horizontally
+            walkingLeftImages[i] = new GreenfootImage(walkingRightImages[i]);
+            walkingLeftImages[i].mirrorHorizontally();
         }
 
         // Track animation frames for walking
@@ -112,7 +119,7 @@ public class Hero extends Actor
         }
         else
         {
-            // Standing still; reset animation
+            // Standing still; reset walking animation
             walkingFrames = 0;
         }
 
@@ -252,6 +259,37 @@ public class Hero extends Actor
     }
 
     /**
+     * Animate walking
+     */
+    private void animateWalk(String direction)
+    {
+        // Track walking animation frames
+        walkingFrames += 1;
+
+        // Get current animation stage
+        int stage = walkingFrames / WALK_ANIMATION_DELAY;
+
+        // Animate
+        if (stage < walkingRightImages.length)
+        {
+            // Set image for this stage of the animation
+            if (direction == FACING_RIGHT)
+            {
+                setImage(walkingRightImages[stage]);
+            }
+            else
+            {
+                setImage(walkingLeftImages[stage]);
+            }
+        }
+        else
+        {
+            // Start animation loop from beginning
+            walkingFrames = 0;
+        }
+    }
+
+    /**
      * Move the hero to the right.
      */
     public void moveRight()
@@ -262,22 +300,7 @@ public class Hero extends Actor
         // Set image 
         if (onPlatform())
         {
-            // Track walking animation frames
-            walkingFrames += 1;
-
-            // Get current animation stage
-            int stage = walkingFrames / WALK_ANIMATION_DELAY;
-
-            // Animate
-            if (stage < walkingImages.length)
-            {
-                setImage(walkingImages[stage]);
-            }
-            else
-            {
-                // Start animation loop from beginning
-                walkingFrames = 0;
-            }
+            animateWalk(horizontalDirection);
         }
         else
         {
@@ -389,7 +412,7 @@ public class Hero extends Actor
         // Set image 
         if (onPlatform())
         {
-            setImage("hero-left.png");
+            animateWalk(horizontalDirection);
         }
         else
         {
