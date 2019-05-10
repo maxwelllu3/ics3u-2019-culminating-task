@@ -42,6 +42,11 @@ public class Hero extends Actor
     private static final String FACING_LEFT = "left";
     private String horizontalDirection;
 
+    // For walking animation
+    private GreenfootImage walkingImages[];
+    private static final int WALK_ANIMATION_DELAY = 8;
+    private int walkingFrames;
+
     /**
      * Constructor
      * 
@@ -60,9 +65,21 @@ public class Hero extends Actor
 
         // Facing right to start
         horizontalDirection = FACING_RIGHT;
-        
+
         // Set image
         setImage("hero-jump-down-right.png");
+
+        // Initialize the 'walking' arrays with images
+        walkingImages = new GreenfootImage[2];
+
+        // Load walking images from disk
+        for (int i = 0; i < walkingImages.length; i++)
+        {
+            walkingImages[i] = new GreenfootImage("hero-walk-right-" + i + ".png");
+        }
+
+        // Track animation frames for walking
+        walkingFrames = 0;
     }
 
     /**
@@ -84,14 +101,22 @@ public class Hero extends Actor
      */
     private void checkKeys()
     {
+        // Walking keys
         if (Greenfoot.isKeyDown("left") && !isGameOver)
         {
             moveLeft();
         }
-        if (Greenfoot.isKeyDown("right") && !isGameOver)
+        else if (Greenfoot.isKeyDown("right") && !isGameOver)
         {
             moveRight();
         }
+        else
+        {
+            // Standing still; reset animation
+            walkingFrames = 0;
+        }
+
+        // Jumping
         if (Greenfoot.isKeyDown("space") && !isGameOver)
         {
             // Only able to jump when on a solid object
@@ -113,11 +138,11 @@ public class Hero extends Actor
             deltaY = 0;
 
             // Set image
-            if (horizontalDirection == FACING_RIGHT)
+            if (horizontalDirection == FACING_RIGHT && Greenfoot.isKeyDown("right") == false)
             {
                 setImage("hero-right.png");
             }
-            else
+            else if (horizontalDirection == FACING_LEFT && Greenfoot.isKeyDown("left") == false)
             {
                 setImage("hero-left.png");
             }
@@ -206,7 +231,7 @@ public class Hero extends Actor
         if (deltaY > 0)
         {
             verticalDirection = JUMPING_DOWN;
-            
+
             // Set image
             if (horizontalDirection == FACING_RIGHT)
             {
@@ -237,7 +262,22 @@ public class Hero extends Actor
         // Set image 
         if (onPlatform())
         {
-            setImage("hero-right.png");
+            // Track walking animation frames
+            walkingFrames += 1;
+
+            // Get current animation stage
+            int stage = walkingFrames / WALK_ANIMATION_DELAY;
+
+            // Animate
+            if (stage < walkingImages.length)
+            {
+                setImage(walkingImages[stage]);
+            }
+            else
+            {
+                // Start animation loop from beginning
+                walkingFrames = 0;
+            }
         }
         else
         {
