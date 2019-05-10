@@ -14,13 +14,22 @@ public class SideScrollingWorld extends World
      * These are available for use in any method below.
      */    
     // Tile size in pixels for world elements (blocks, clouds, etc)
+    // TO STUDENTS: Modify if your game's tiles have different dimensions
     private static final int TILE_SIZE = 32;
+    private static final int HALF_TILE_SIZE = TILE_SIZE / 2;
 
     // World size constants
+    // TO STUDENTS: Modify only if you're sure
+    //              Should be a resolution that's a multiple of TILE_SIZE
     private static final int VISIBLE_WIDTH = 640;
     private static final int VISIBLE_HEIGHT = 480;
+    
+    // Additional useful constants based on world size
     public static final int HALF_VISIBLE_WIDTH = VISIBLE_WIDTH / 2;
     private static final int HALF_VISIBLE_HEIGHT = VISIBLE_HEIGHT / 2;
+    
+    // Defining the boundaries of the scrollable world
+    // TO STUDENTS: Modify SCROLLABLE_WIDTH if you wish to have a longer level
     public static final int SCROLLABLE_WIDTH = VISIBLE_WIDTH * 3;
     private static final int SCROLLABLE_HEIGHT = VISIBLE_HEIGHT;
 
@@ -52,6 +61,7 @@ public class SideScrollingWorld extends World
      */
     private void setup()
     {
+        // TO STUDENTS: Add, revise, or remove methods as needed to define your own game's world
         addLeftGround();
         addFences();
         addMetalPlateSteps();
@@ -73,8 +83,8 @@ public class SideScrollingWorld extends World
         {
             // Add ground objects at bottom of screen
             // NOTE: Actors are added based on their centrepoint, so the math is a bit trickier.
-            int x = i * TILE_SIZE + TILE_SIZE / 2;
-            int y = getHeight() - TILE_SIZE / 2;
+            int x = i * TILE_SIZE + HALF_TILE_SIZE;
+            int y = getHeight() - HALF_TILE_SIZE;
 
             // Create a ground tile
             Ground groundTile = new Ground(x, y);
@@ -90,28 +100,28 @@ public class SideScrollingWorld extends World
     private void addFences()
     {
         // Three fences on left side of world
-        int x = TILE_SIZE / 2 + TILE_SIZE * 5;
-        int y = VISIBLE_HEIGHT - TILE_SIZE / 2 - TILE_SIZE;
+        int x = HALF_TILE_SIZE + TILE_SIZE * 5;
+        int y = VISIBLE_HEIGHT - HALF_TILE_SIZE - TILE_SIZE;
         Fence fence1 = new Fence(x, y);
         addObject(fence1, x, y);
 
-        x = TILE_SIZE / 2 + TILE_SIZE * 6;
-        y = VISIBLE_HEIGHT - TILE_SIZE / 2 - TILE_SIZE;        
+        x = HALF_TILE_SIZE + TILE_SIZE * 6;
+        y = VISIBLE_HEIGHT - HALF_TILE_SIZE - TILE_SIZE;        
         Fence fence2 = new Fence(x, y);
         addObject(fence2, x, y);
 
-        x = TILE_SIZE / 2 + TILE_SIZE * 7;
-        y = VISIBLE_HEIGHT - TILE_SIZE / 2 - TILE_SIZE;
+        x = HALF_TILE_SIZE + TILE_SIZE * 7;
+        y = VISIBLE_HEIGHT - HALF_TILE_SIZE - TILE_SIZE;
         Fence fence3 = new Fence(x, y);
         addObject(fence3, x, y);
 
         // Two fences on right side of world
-        x = SCROLLABLE_WIDTH - TILE_SIZE / 2 - TILE_SIZE * 3;
+        x = SCROLLABLE_WIDTH - HALF_TILE_SIZE - TILE_SIZE * 3;
         y = VISIBLE_HEIGHT / 2;
         Fence fence4 = new Fence(x, y);
         addObject(fence4, x, y);
 
-        x = SCROLLABLE_WIDTH - TILE_SIZE / 2 - TILE_SIZE * 4;
+        x = SCROLLABLE_WIDTH - HALF_TILE_SIZE - TILE_SIZE * 4;
         y = VISIBLE_HEIGHT / 2;
         Fence fence5 = new Fence(x, y);
         addObject(fence5, x, y);
@@ -130,7 +140,7 @@ public class SideScrollingWorld extends World
         for (int i = 0; i < COUNT_OF_METAL_PLATES / PLATES_PER_GROUP; i += 1)
         {
             // Group of four metal plates all at same y position
-            int y = VISIBLE_HEIGHT - TILE_SIZE / 2 * 3 - i * TILE_SIZE;
+            int y = VISIBLE_HEIGHT - HALF_TILE_SIZE * 3 - i * TILE_SIZE;
 
             // Add the individual plates in a given group
             for (int j = 0; j < PLATES_PER_GROUP; j += 1)
@@ -170,7 +180,7 @@ public class SideScrollingWorld extends World
     private void addHero()
     {
         // Initial horizontal position
-        int initialX = getWidth() - 5 * getWidth() / 6;
+        int initialX = TILE_SIZE * 3;
 
         // Instantiate the hero object
         theHero = new Hero(initialX);
@@ -194,8 +204,8 @@ public class SideScrollingWorld extends World
         for (int i = 0; i < COUNT_OF_GROUND; i += 1)
         {
             // Position in wider scrollable world
-            int x = SCROLLABLE_WIDTH - TILE_SIZE / 2 - i * TILE_SIZE;
-            int y = VISIBLE_HEIGHT / 2 + TILE_SIZE;
+            int x = SCROLLABLE_WIDTH - HALF_TILE_SIZE - i * TILE_SIZE;
+            int y = HALF_VISIBLE_HEIGHT + TILE_SIZE;
 
             // Create object and add it
             Ground ground = new Ground(x, y);
@@ -208,8 +218,8 @@ public class SideScrollingWorld extends World
             for (int j = 0; j < GROUND_BELOW_ROWS; j += 1)
             {
                 // Position in wider scrollable world
-                int x = SCROLLABLE_WIDTH - TILE_SIZE / 2 - i * TILE_SIZE;
-                int y = VISIBLE_HEIGHT / 2 + TILE_SIZE + TILE_SIZE * (j + 1);
+                int x = SCROLLABLE_WIDTH - HALF_TILE_SIZE - i * TILE_SIZE;
+                int y = HALF_VISIBLE_HEIGHT + TILE_SIZE + TILE_SIZE * (j + 1);
 
                 // Create object and add it
                 GroundBelow groundBelow = new GroundBelow(x, y);
