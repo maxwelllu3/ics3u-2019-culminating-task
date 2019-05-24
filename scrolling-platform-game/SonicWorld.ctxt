@@ -1,0 +1,24 @@
+#BlueJ class context
+comment0.target=SonicWorld
+comment0.text=\n\ A\ side-scrolling\ platform\ game.\n\ \n\ @author\ Maxwell\ B.\ Lu\n\ @version\ May\ 16,\ 2019\n
+comment1.params=
+comment1.target=SonicWorld()
+comment1.text=\n\ Constructor\ for\ objects\ of\ class\ SonicWorld.\n
+comment2.params=
+comment2.target=void\ setup()
+comment2.text=\n\ Set\ up\ the\ entire\ world.\n
+comment3.params=
+comment3.target=void\ act()
+comment3.text=\n\ Act\n\ \n\ This\ method\ is\ called\ approximately\ 60\ times\ per\ second.\n
+comment4.params=
+comment4.target=void\ addSonic()
+comment4.text=\n\ Add\ the\ hero\ to\ the\ world.\n
+comment5.params=
+comment5.target=Sonic\ getSonic()
+comment5.text=\n\ Return\ an\ object\ reference\ to\ the\ hero.\n
+comment6.params=
+comment6.target=void\ started()
+comment7.params=
+comment7.target=void\ setGameOver()
+comment7.text=\n\ Set\ game\ over\n
+numComments=8
