@@ -48,7 +48,8 @@ public class Sonic extends Actor
     private static final int WALK_ANIMATION_DELAY = 8;
     private static final int COUNT_OF_WALKING_IMAGES = 2;
     private int walkingFrames;
-
+    private boolean hasFired;
+    
     /**
      * Constructor
      * 
@@ -87,6 +88,10 @@ public class Sonic extends Actor
 
         // Track animation frames for walking
         walkingFrames = 0;
+        
+        // Starts having not fired
+        hasFired = false;
+
     }
 
     /**
@@ -132,8 +137,35 @@ public class Sonic extends Actor
                 jump();
             }
         }
+
+        // Shooting
+        if (Greenfoot.isKeyDown("space") && !isGameOver && !hasFired)
+        {
+            hasFired = true;
+            fire();
+        }
+        
+        if (!Greenfoot.isKeyDown("space") && !isGameOver)
+        {
+            hasFired = false;
+        }
     }
 
+    /**
+     * Fire a bullet if the gun is ready.
+     */
+    private void fire() 
+    {
+        if (horizontalDirection == FACING_RIGHT)
+        {
+            getWorld().addObject(new Bullet(0), getX(), getY());
+        }
+        else 
+        {
+            getWorld().addObject(new Bullet(180), getX(), getY());
+        }
+
+    }
     /**
      * Should the sonic be falling right now?
      */
@@ -386,9 +418,7 @@ public class Sonic extends Actor
                 decoration.moveLeft(deltaX);
             }
 
-            
         }   
-
     }
 
     /**
@@ -480,9 +510,7 @@ public class Sonic extends Actor
                 decoration.moveRight(deltaX);
             }
 
-            
         } 
-
     }
 
     /**
