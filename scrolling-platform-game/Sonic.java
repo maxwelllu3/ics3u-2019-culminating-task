@@ -143,6 +143,7 @@ public class Sonic extends Actor
         {
             hasFired = true;
             fire();
+            Greenfoot.playSound("Shoot.wav");
         }
         
         if (!Greenfoot.isKeyDown("space") && !isGameOver)

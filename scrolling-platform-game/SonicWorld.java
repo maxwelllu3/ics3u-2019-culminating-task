@@ -285,9 +285,10 @@ public class SonicWorld extends World
     private void addShellcracker()
     {
 
-        Shellcracker theShellcracker = new Shellcracker();
-
-        addObject(theShellcracker, 470, 415);
+        Shellcracker Shellcracker1 = new Shellcracker(470, 415);
+        addObject(Shellcracker1, 470, 415);
+        Shellcracker Shellcracker2 = new Shellcracker(500, 35);
+        addObject(Shellcracker2, 600, 35);
     }
 
     /**
