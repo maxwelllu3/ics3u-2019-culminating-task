@@ -67,7 +67,7 @@ public class SonicWorld extends World
         //  addClouds();
         //  addRightGround();
         addSonic();
-
+        addShellcracker();
         for (int i = 0; i < 4; i += 1)
         {
             int x = 7 * TILE_SIZE + HALF_TILE_SIZE + i * TILE_SIZE;
@@ -277,6 +277,17 @@ public class SonicWorld extends World
 
         // Add hero in bottom left corner of screen
         addObject(theSonic, initialX, getHeight() / 4 * 2);
+    }
+    
+    /**
+     * Add the hero to the world.
+     */
+    private void addShellcracker()
+    {
+
+        Shellcracker theShellcracker = new Shellcracker();
+
+        addObject(theShellcracker, 470, 415);
     }
 
     /**

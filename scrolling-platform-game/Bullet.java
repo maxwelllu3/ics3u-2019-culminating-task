@@ -20,5 +20,10 @@ public class Bullet extends Actor
     public void act()
     {
         move(speed);
+        if (isTouching(Shellcracker.class))
+        {
+            removeTouching(Shellcracker.class);
+            
+        }
     }
 }
